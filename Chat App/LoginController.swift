@@ -12,9 +12,9 @@ class LoginController: UIViewController, UITextFieldDelegate {
 
     fileprivate let appTitleContainerHeight: CGFloat = 150
     fileprivate let contentOffset: CGFloat = 50
-    fileprivate let stackViewHeight: CGFloat = 100
+    fileprivate let stackViewHeight: CGFloat = 112
     fileprivate let contentSpacing: CGFloat = 12
-    fileprivate let loginButtonHeight: CGFloat = 46
+    fileprivate let loginButtonHeight: CGFloat = 50
     
     fileprivate static let redColor: UIColor = .rgb(r: 255, g: 51, b: 51)
     
@@ -61,7 +61,7 @@ class LoginController: UIViewController, UITextFieldDelegate {
          return button
      }()
     
-    lazy var dontHavwAccountButton: UIButton = { [weak self] in
+    lazy var dontHaveAccountButton: UIButton = { [weak self] in
         guard let this = self else { return UIButton() }
         let button = UIButton(type:  .system)
         
@@ -77,6 +77,8 @@ class LoginController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        navigationController?.isNavigationBarHidden = true
         
         view.backgroundColor = .white
        
@@ -111,10 +113,10 @@ class LoginController: UIViewController, UITextFieldDelegate {
     }
     
     fileprivate func setupSignUpButton() {
-        view.addSubview(dontHavwAccountButton)
+        view.addSubview(dontHaveAccountButton)
         
-        dontHavwAccountButton.anchor(top: loginButton.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentOffset, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
-        dontHavwAccountButton.anchorCenterXToSuperview()
+        dontHaveAccountButton.anchor(top: loginButton.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
+        dontHaveAccountButton.anchorCenterXToSuperview()
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -139,7 +141,8 @@ extension LoginController {
     }
     
     func handleShowSignUp() {
-        print("show sign up pressed")
+        navigationController?.pushViewController(SignUpController(), animated: true)
+//        present(SignUpController(), animated: true, completion: nil)
     }
 }
 
