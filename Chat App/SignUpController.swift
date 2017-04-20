@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SignUpController: UIViewController, UITextFieldDelegate {
+class SignUpController: UIViewController, UITextFieldDelegate, Alerter, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     fileprivate let addProfileImageLength: CGFloat = 150
     fileprivate let stackViewHeight: CGFloat = 40 * 5 + 10 * 4
@@ -20,10 +20,10 @@ class SignUpController: UIViewController, UITextFieldDelegate {
     
     fileprivate static let redColor: UIColor = .rgb(r: 255, g: 51, b: 51)
     
-    lazy var addProfileImageView: UIButton = { [weak self] in
+    lazy var addProfileImageButton: UIButton = { [weak self] in
         guard let this = self else { return UIButton() }
         let button = UIButton(type: .system)
-        button.setImage(#imageLiteral(resourceName: "background_character"), for: .normal)
+        button.setImage(#imageLiteral(resourceName: "background_character").withRenderingMode(.alwaysOriginal), for: .normal)
         button.addTarget(this, action: #selector(handleAddProfile), for: .touchUpInside)
         return button
     }()
@@ -103,29 +103,49 @@ class SignUpController: UIViewController, UITextFieldDelegate {
         setupAlreadyHaveAccountButton()
     }
     
-    fileprivate static func baseTextField(placeholder: String) -> UITextField {
-        let textField = UITextField()
-        textField.backgroundColor = UIColor(white: 0, alpha: 0.05)
-        textField.borderStyle = .roundedRect
-        textField.placeholder = placeholder
-        return textField
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleSignUp()
+        return true
     }
     
-    fileprivate func setupDelegates() {
-        firstnameField.delegate = self
-        lastnameField.delegate = self
-        usernameField.delegate = self
-        emailField.delegate = self
-        passwordField.delegate = self
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        animateConstraintTo(value: contentOffset * -3)
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        animateConstraintTo(value: contentOffset)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let editedimage = info["UIImagePickerControllerEditedImage"] as? UIImage {
+            addProfileImageButton.setImage(editedimage.withRenderingMode(.alwaysOriginal), for: .normal)
+        } else if let originalImage = info["UIImagePickerControllerOriginalImage"] as? UIImage {
+            addProfileImageButton.setImage(originalImage.withRenderingMode(.alwaysOriginal), for: .normal)
+        }
+        
+        addProfileImageButton.layer.cornerRadius = addProfileImageButton.frame.width / 2
+        addProfileImageButton.layer.masksToBounds = true
+        addProfileImageButton.layer.borderColor = UIColor.black.cgColor
+        addProfileImageButton.layer.borderWidth = 1.5
+        
+        dismiss(animated: true, completion: nil)
+    }
+    
+}
+
+extension SignUpController {
     
     fileprivate func setupAddImage() {
-        view.addSubview(addProfileImageView)
+        view.addSubview(addProfileImageButton)
         view.addSubview(profileImageHelperLabel)
         
-        addProfileTopConstraint = addProfileImageView.anchorAndReturn(top: view.topAnchor, left: nil, bottom: nil, right: nil, topConstant: contentOffset, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: addProfileImageLength, heightConstant: addProfileImageLength)[0]
-        addProfileImageView.anchorCenterXToSuperview()
-        profileImageHelperLabel.anchor(top: addProfileImageView.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
+        addProfileTopConstraint = addProfileImageButton.anchorAndReturn(top: view.topAnchor, left: nil, bottom: nil, right: nil, topConstant: contentOffset, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: addProfileImageLength, heightConstant: addProfileImageLength)[0]
+        addProfileImageButton.anchorCenterXToSuperview()
+        profileImageHelperLabel.anchor(top: addProfileImageButton.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
         profileImageHelperLabel.anchorCenterXToSuperview()
     }
     
@@ -148,26 +168,6 @@ class SignUpController: UIViewController, UITextFieldDelegate {
         alreadyHaveAccountButton.anchor(top: signUpButton.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
         alreadyHaveAccountButton.anchorCenterXToSuperview()
     }
-}
-
-extension SignUpController {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        handleSignUp()
-        return true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
-    }
-    
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        animateConstraintTo(value: contentOffset * -3)
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        animateConstraintTo(value: contentOffset)
-    }
     
     fileprivate func animateConstraintTo(value: CGFloat) {
         UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: { [weak self] in
@@ -177,8 +177,28 @@ extension SignUpController {
         }, completion: nil)
     }
     
+    fileprivate static func baseTextField(placeholder: String) -> UITextField {
+        let textField = UITextField()
+        textField.backgroundColor = UIColor(white: 0, alpha: 0.05)
+        textField.borderStyle = .roundedRect
+        textField.placeholder = placeholder
+        return textField
+    }
+    
+    fileprivate func setupDelegates() {
+        firstnameField.delegate = self
+        lastnameField.delegate = self
+        usernameField.delegate = self
+        emailField.delegate = self
+        passwordField.delegate = self
+    }
+    
     func handleAddProfile() {
-        print("change profile image tapped")
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        
+        present(imagePickerController, animated: true, completion: nil)
     }
     
     func handleAlreadyHaveAccount() {
@@ -186,6 +206,78 @@ extension SignUpController {
     }
     
     func handleSignUp() {
-        print("Sign Up Pressed")
+        guard let firstName = firstnameField.text, let lastName = lastnameField.text, let username = usernameField.text, let password = passwordField.text, let email = emailField.text else { return }
+        if firstName.characters.count < 1 || lastName.characters.count < 1 || username.characters.count < 1 || password.characters.count < 1 || email.characters.count < 1 {
+            present(alertVC(title: "The Form is Incomplete", message: "All Fields are Required"), animated: true, completion: nil)
+            return
+        }
+        
+        // Prevent extreme cases where a signup page is still shown after data is saved to Firebase.  This normally would not happen.
+        if AuthenticationService.shared.currentId() != nil {
+            present(alertVC(title: "A user is already signed in", message: "Cannot create a user while signed in"), animated: true, completion: nil)
+            return
+        }
+        
+        createUser(firstName: firstName, lastName: lastName, username: username, email: email, password: password)
+    }
+    
+    fileprivate func createUser(firstName: String, lastName: String, username: String, email: String, password: String) {
+        AuthenticationService.shared.createUser(email: email, password: password) { [weak self] (error, user) in
+            guard let this = self else { return }
+            
+            if let error = error {
+                this.present(this.alertVC(title: "An error has occurred", message: error), animated: true, completion: nil)
+                return
+            }
+            
+            DatabaseService.shared.isUsernameUnique(username: username, onComplete: { (flag) in
+                if !flag {
+                    this.present(this.alertVC(title: "Duplicate username", message: "The chosen username has already been taken.  Please choose a different username"), animated: true, completion: nil)
+                    AuthenticationService.shared.deleteCurrentUser { return }
+                    return
+                }
+                
+                guard let uid = user?.uid else { return }
+                this.saveDataToFirebase(uid: uid, firstName: firstName, lastName: lastName, username: username)
+            })
+        }
+    }
+    
+    fileprivate func saveDataToFirebase(uid: String, firstName: String, lastName: String, username: String) {
+        guard let image = self.addProfileImageButton.imageView?.image, let uploadData = UIImageJPEGRepresentation(image, 0.3) else { return }
+        
+        StorageService.shared.uploadToStorage(type: .profile, data: uploadData, url: nil) { [weak self] (error, metadata) in
+            guard let this = self else { return }
+
+            if let error = error {
+                this.present(this.alertVC(title: "Error saving to storage", message: error), animated: true, completion: nil)
+                AuthenticationService.shared.deleteCurrentUser { return }
+                return
+            }
+            
+            guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else { return }
+            
+            var data = ["firstName": firstName, "lastName": lastName, "username": username, "profileImageUrl": profileImageUrl] as Dictionary<String, AnyObject>
+        
+            DatabaseService.shared.saveData(type: .user, data: data, firstChild: uid, secondChild: nil, appendAutoId: false, onComplete: { (error, _) in
+                if let error = error {
+                    this.present(this.alertVC(title: "Error saving data", message: error), animated: true, completion: nil)
+                    AuthenticationService.shared.deleteCurrentUser { return }
+                    return
+                }
+                
+                data = [username: 1] as Dictionary<String, AnyObject>
+                
+                DatabaseService.shared.saveData(type: .username, data: data, firstChild: nil, secondChild: nil, appendAutoId: false, onComplete: { (error, _) in
+                    if let error = error {
+                        this.present(this.alertVC(title: "Error saving data", message: error), animated: true, completion: nil)
+                        AuthenticationService.shared.deleteCurrentUser { return }
+                        return
+                    }
+                    
+                    print("All data saved succesfully")
+                })
+            })
+        }
     }
 }
