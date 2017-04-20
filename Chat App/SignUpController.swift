@@ -215,6 +215,16 @@ extension SignUpController {
         // Prevent extreme cases where a signup page is still shown after data is saved to Firebase.  This normally would not happen.
         if AuthenticationService.shared.currentId() != nil {
             present(alertVC(title: "A user is already signed in", message: "Cannot create a user while signed in"), animated: true, completion: nil)
+            
+            // Temporarilly, this will sign you out. This will be removed in future.
+            AuthenticationService.shared.signOut(onCompletion: { [weak self] (error, _) in
+                guard let this = self else { return }
+                if let error = error {
+                    this.present(this.alertVC(title: "An error has occurred", message: error), animated: true, completion: nil)
+                    return
+                }
+            })
+            
             return
         }
         
@@ -275,7 +285,7 @@ extension SignUpController {
                         return
                     }
                     
-                    print("All data saved succesfully")
+                    this.dismiss(animated: true, completion: nil)
                 })
             })
         }

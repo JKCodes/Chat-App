@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginController: UIViewController, UITextFieldDelegate {
+class LoginController: UIViewController, UITextFieldDelegate, Alerter {
 
     fileprivate let appTitleContainerHeight: CGFloat = 150
     fileprivate let contentOffset: CGFloat = 50
@@ -32,11 +32,12 @@ class LoginController: UIViewController, UITextFieldDelegate {
         return label
     }()
     
-    let usernameField: UITextField = {
+    let emailField: UITextField = {
         let tf = UITextField()
         tf.backgroundColor = UIColor(white: 0, alpha: 0.05)
         tf.borderStyle = .roundedRect
-        tf.placeholder = "Username"
+        tf.placeholder = "Email"
+        tf.keyboardType = .emailAddress
         return tf
     }()
     
@@ -82,31 +83,47 @@ class LoginController: UIViewController, UITextFieldDelegate {
         
         view.backgroundColor = .white
        
-        usernameField.delegate = self
+        emailField.delegate = self
         passwordField.delegate = self
         
         setupAppTitle()
         setupInputArea()
         setupSignUpButton()
     }
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        handleLogin()
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+}
 
+extension LoginController {
+    
     fileprivate func setupAppTitle() {
         view.addSubview(appTitleContainerView)
         appTitleContainerView.addSubview(appTitleLabel)
-
+        
         appTitleContainerView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: appTitleContainerHeight)
         appTitleLabel.anchorCenterXYSuperview()
     }
     
     fileprivate func setupInputArea() {
-        let stackView = UIStackView(arrangedSubviews: [usernameField, passwordField])
+        let stackView = UIStackView(arrangedSubviews: [emailField, passwordField])
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
         stackView.spacing = contentSpacing
         
         view.addSubview(stackView)
         view.addSubview(loginButton)
-
+        
         stackView.anchor(top: appTitleContainerView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topConstant: contentOffset, leftConstant: contentOffset, bottomConstant: 0, rightConstant: contentOffset, widthConstant: 0, heightConstant: stackViewHeight)
         
         loginButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, bottom: nil, right: view.rightAnchor, topConstant: contentSpacing, leftConstant: contentOffset, bottomConstant: 0, rightConstant: contentOffset, widthConstant: 0, heightConstant: loginButtonHeight)
@@ -118,31 +135,44 @@ class LoginController: UIViewController, UITextFieldDelegate {
         dontHaveAccountButton.anchor(top: loginButton.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
         dontHaveAccountButton.anchorCenterXToSuperview()
     }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
-    
-}
 
-extension LoginController {
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        handleLogin()
-        return true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        view.endEditing(true)
+    func handleShowSignUp() {
+        navigationController?.pushViewController(SignUpController(), animated: true)
     }
     
     func handleLogin() {
-        print("login button pressed")
-    }
-    
-    func handleShowSignUp() {
-        navigationController?.pushViewController(SignUpController(), animated: true)
-//        present(SignUpController(), animated: true, completion: nil)
+        guard let email = emailField.text, let password = passwordField.text else { return }
+        if email.characters.count < 1 || password.characters.count < 1 {
+            present(alertVC(title: "The Form is Incomplete", message: "All Fields are Required"), animated: true, completion: nil)
+            return
+        }
+        
+        // Prevent extreme cases where a signup page is still shown after data is saved to Firebase.  This normally would not happen.
+        if AuthenticationService.shared.currentId() != nil {
+            present(alertVC(title: "A user is already signed in", message: "Cannot create a user while signed in"), animated: true, completion: nil)
+            
+            // Temporarilly, this will sign you out. This will be removed in future.
+            AuthenticationService.shared.signOut(onCompletion: { [weak self] (error, _) in
+                guard let this = self else { return }
+                if let error = error {
+                    this.present(this.alertVC(title: "An error has occurred", message: error), animated: true, completion: nil)
+                    return
+                }
+            })
+            
+            return
+        }
+        
+        AuthenticationService.shared.signIn(email: email, password: password) { [weak self] (error, user) in
+            guard let this = self else { return }
+            
+            if let error = error {
+                this.present(this.alertVC(title: "An error has occurred", message: error), animated: true, completion: nil)
+                return
+            }
+            
+            this.dismiss(animated: true, completion: nil)
+        }
     }
 }
 
