@@ -8,18 +8,27 @@
 
 import UIKit
 
-class HomeController: UITableViewController, Alerter {
+class HomeController: UITableViewController, Alerter, MenuDelegate {
     
     fileprivate let messageCellId = "messageCellId"
     fileprivate let emptyCellId = "emptyCellId"
     fileprivate let cellHeight: CGFloat = 75
     
+    fileprivate var currentUserId: String?
     fileprivate var messages = [String]()
     
     fileprivate let backgroundImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = #imageLiteral(resourceName: "bg")
         return iv
+    }()
+    
+    fileprivate lazy var menuController: MenuController = { [weak self] in
+        guard let this = self else { return MenuController() }
+        
+        let controller = MenuController()
+        controller.delegate = this
+        return controller
     }()
     
     override func viewDidLoad() {
@@ -34,13 +43,18 @@ class HomeController: UITableViewController, Alerter {
         navigationItem.rightBarButtonItems = [newMessageBarButton, searchBarButton]
 
         checkIfLoggedIn()
-        
+                
         tableView.backgroundView = backgroundImageView
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: messageCellId)
         tableView.register(EmptyCell.self, forCellReuseIdentifier: emptyCellId)
-        
-        tableView.alwaysBounceVertical = false
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        guard let id = AuthenticationService.shared.currentId() else { return }
+        if currentUserId != id {
+            setCurrentUser()
+        }
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -78,7 +92,6 @@ class HomeController: UITableViewController, Alerter {
 
 extension HomeController {
     
-    
     fileprivate func checkIfLoggedIn() {
         if AuthenticationService.shared.currentId() == nil {
             perform(#selector(handleLogout), with: nil, afterDelay: 0)
@@ -86,6 +99,38 @@ extension HomeController {
             print("user is logged in")
         }
     }
+    
+    fileprivate func setCurrentUser() {
+        guard let currentUserId = AuthenticationService.shared.currentId() else { return }
+        
+        fetchUser(id: currentUserId, completion: { [weak self] (user) in
+            self?.currentUserId = currentUserId
+            self?.menuController.user = user
+        })
+    }
+    
+    fileprivate func fetchUser(id: String, completion: @escaping (User) -> ()) {
+        DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: id, secondChild: nil, propagate: nil, sortBy: nil) { (snapshot) in
+            guard let userDictionary = snapshot.value as? Dictionary<String, Any> else { return }
+            print(userDictionary)
+            let user = User(dictionary: userDictionary)
+            
+            completion(user)
+        }
+    }
+    
+    func showController(menuItem: MenuItem) {
+        
+        if menuItem.name == .logout {
+            handleLogout()
+        } else {
+            let vc = UIViewController()
+            vc.navigationItem.title = menuItem.name.rawValue
+            vc.view.backgroundColor = .white
+            navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
     
     func handleSearch() {
         print("search button tapped")
@@ -110,7 +155,6 @@ extension HomeController {
     }
     
     func handleMenu() {
-        print("Menu button clicked")
-        handleLogout()
+        menuController.showMenu()
     }
 }
