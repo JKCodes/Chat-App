@@ -9,19 +9,17 @@
 import UIKit
 
 class User: NSObject {
-    var firstName: String?
-    var lastName: String?
-    var email: String?
-    var username: String?
-    var profileImageUrl: String?
+    var firstName: String
+    var lastName: String
+    var email: String
+    var username: String
+    var profileImageUrl: String
     
     init(dictionary: [String: Any]) {
-        super.init()
-        
-        self.firstName = dictionary["firstName"] as? String
-        self.lastName = dictionary["lastName"] as? String
-        self.email = dictionary["email"] as? String
-        self.username = dictionary["username"] as? String
-        self.profileImageUrl = dictionary["profileImageUrl"] as? String
+        self.firstName = dictionary["firstName"] as? String ?? ""
+        self.lastName = dictionary["lastName"] as? String ?? ""
+        self.email = dictionary["email"] as? String ?? ""
+        self.username = dictionary["username"] as? String ?? ""
+        self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
     }
 }

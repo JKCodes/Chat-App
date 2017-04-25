@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuItemCell: BaseCell {
+class MenuItemCell: BaseCollectionViewCell {
     
     fileprivate let contentSpacing: CGFloat = 16
     fileprivate let iconImageLength: CGFloat = 30

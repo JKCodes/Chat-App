@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MenuHeader: BaseCell {
+class MenuHeader: BaseCollectionViewCell {
     
     fileprivate let nameLabelTopOffset: CGFloat = 40
     fileprivate let nameLabelLeftOffset: CGFloat = 20
