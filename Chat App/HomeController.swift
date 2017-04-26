@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeController: UITableViewController, Alerter, MenuDelegate {
+class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDelegate {
     
     fileprivate let messageCellId = "messageCellId"
     fileprivate let emptyCellId = "emptyCellId"
@@ -69,7 +69,8 @@ class HomeController: UITableViewController, Alerter, MenuDelegate {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if messages.count == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellId, for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: emptyCellId, for: indexPath) as! EmptyCell
+            cell.delegate = self
             cell.selectionStyle = .none
             return cell
         } else {
@@ -137,7 +138,8 @@ extension HomeController {
     }
     
     func handleNewMessage() {
-        print("newMessage button Tapped")
+        let newMessageController = NewMessageController()
+        navigationController?.pushViewController(newMessageController, animated: true)
     }
     
     func handleLogout() {

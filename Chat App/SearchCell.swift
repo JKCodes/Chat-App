@@ -51,7 +51,7 @@ class SearchCell: BaseCollectionViewCell {
         let label = UILabel()
         label.text = "Username"
         label.font = UIFont.avenirNextFont(size: 14, bold: false)
-        label.textColor = UIColor(white: 0, alpha: 0.8)
+        label.textColor = UIColor(white: 0, alpha: 0.5)
         return label
     }()
     

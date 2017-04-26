@@ -13,20 +13,12 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate let cellId = "cellId"
     fileprivate let cellHeight: CGFloat = 80
     fileprivate let contentSpacing: CGFloat = 8
-    fileprivate let searchBarleftSpacing: CGFloat = 100
+    fileprivate let searchBarLeftSpacing: CGFloat = 100
     
     fileprivate let window = UIApplication.shared.keyWindow
     fileprivate let currentUserId = AuthenticationService.shared.currentId()
     
-    lazy var searchBar: UISearchBar = { [weak self] in
-        guard let this = self else { return UISearchBar() }
-        let sb = UISearchBar()
-        sb.placeholder = "Enter username or name"
-        sb.barTintColor = .white
-        sb.delegate = this
-        sb.autocapitalizationType = .none
-        return sb
-    }()
+    let searchBar = SearchBar()
     
     fileprivate var filteredUsers = [User]()
     fileprivate var users = [User]()
@@ -40,7 +32,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
 
         let navBar = navigationController?.navigationBar
         
-        searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, topConstant: 0, leftConstant: searchBarleftSpacing, bottomConstant: 0, rightConstant: contentSpacing, widthConstant: 0, heightConstant: 0)
+        searchBar.delegate = self
+        searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, topConstant: 0, leftConstant: searchBarLeftSpacing, bottomConstant: 0, rightConstant: contentSpacing, widthConstant: 0, heightConstant: 0)
         
         collectionView?.alwaysBounceVertical = true
         collectionView?.keyboardDismissMode = .onDrag
@@ -93,35 +86,24 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
                 return (user.username.lowercased().contains(searchText.lowercased())) || (user.firstName.lowercased().contains(searchText.lowercased())) || (user.lastName.lowercased().contains(searchText.lowercased()))
             }
         }
-        collectionView?.reloadData()
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView?.reloadData()
+        }
     }
 }
 
 extension SearchController {
     
-    fileprivate func fetchUsers() {
-        guard let uid = currentUserId else { return }
+    
+    func fetchUsers() {
         
-        DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: nil, secondChild: nil, propagate: nil, sortBy: nil) { [weak self] (snapshot) in
-            guard let this = self, let dictionaries = snapshot.value as? [String: Any] else { return }
-            
-            dictionaries.forEach({ (key, value) in
-                if key == uid {
-                    return
-                }
-                
-                guard let userDictionary = value as? [String: Any] else { return }
-                
-                let user = User(uid: key, dictionary: userDictionary)
-                this.users.append(user)
-            })
-            
-            this.users.sort(by: { (u1, u2) -> Bool in
-                return u1.username.compare(u2.username) == .orderedAscending
-            })
-            
-            this.filteredUsers = this.users
-            this.collectionView?.reloadData()
+        DatabaseService.shared.fetchUsers { [weak self] (fetchedUsers) in
+            self?.users = fetchedUsers
+            self?.filteredUsers = fetchedUsers
+            DispatchQueue.main.async {
+                self?.collectionView?.reloadData()
+            }
         }
     }
     

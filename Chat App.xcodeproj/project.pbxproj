@@ -19,6 +19,12 @@
 		D81D607B1E9D2C4F00151664 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81D607A1E9D2C4F00151664 /* LoginController.swift */; };
 		D81D60801E9D2C4F00151664 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D81D607F1E9D2C4F00151664 /* Assets.xcassets */; };
 		D81D60831E9D2C4F00151664 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D81D60811E9D2C4F00151664 /* LaunchScreen.storyboard */; };
+		D87DE0651EB099850039A638 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DE0641EB099850039A638 /* NewMessageController.swift */; };
+		D87DE0671EB0BB590039A638 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DE0661EB0BB590039A638 /* SearchBar.swift */; };
+		D87DE0691EB0BE390039A638 /* EmptyCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DE0681EB0BE390039A638 /* EmptyCellDelegate.swift */; };
+		D87DE06B1EB0C61D0039A638 /* DatabaseService + fetchUsers.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DE06A1EB0C61D0039A638 /* DatabaseService + fetchUsers.swift */; };
+		D87DE06D1EB0C9E20039A638 /* UserCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DE06C1EB0C9E20039A638 /* UserCell.swift */; };
+		D87DE06F1EB0D2730039A638 /* SearchCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D87DE06E1EB0D2720039A638 /* SearchCellDelegate.swift */; };
 		D89600A21EAFB5320091FF98 /* SearchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89600A11EAFB5320091FF98 /* SearchCell.swift */; };
 		D8A4A2871E9D3F1000F54B68 /* BaseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A4A2861E9D3F1000F54B68 /* BaseCell.swift */; };
 		D8A4A2891E9D3F2400F54B68 /* UIView + Anchors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8A4A2881E9D3F2400F54B68 /* UIView + Anchors.swift */; };
@@ -54,6 +60,12 @@
 		D81D607F1E9D2C4F00151664 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D81D60821E9D2C4F00151664 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D81D60841E9D2C4F00151664 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D87DE0641EB099850039A638 /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
+		D87DE0661EB0BB590039A638 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		D87DE0681EB0BE390039A638 /* EmptyCellDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCellDelegate.swift; sourceTree = "<group>"; };
+		D87DE06A1EB0C61D0039A638 /* DatabaseService + fetchUsers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DatabaseService + fetchUsers.swift"; sourceTree = "<group>"; };
+		D87DE06C1EB0C9E20039A638 /* UserCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserCell.swift; sourceTree = "<group>"; };
+		D87DE06E1EB0D2720039A638 /* SearchCellDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCellDelegate.swift; sourceTree = "<group>"; };
 		D89600A11EAFB5320091FF98 /* SearchCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchCell.swift; sourceTree = "<group>"; };
 		D8A4A2861E9D3F1000F54B68 /* BaseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCell.swift; sourceTree = "<group>"; };
 		D8A4A2881E9D3F2400F54B68 /* UIView + Anchors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView + Anchors.swift"; sourceTree = "<group>"; };
@@ -134,6 +146,7 @@
 				D8AE6EC41EAA867900820525 /* Model */,
 				D8AE6EBE1EAA804C00820525 /* Protocols */,
 				D8A4A2851E9D3F0800F54B68 /* Util */,
+				D87DE0631EB0995E0039A638 /* New Message */,
 				D8AE6EC31EAA844A00820525 /* Menu */,
 				D8B604D91EAEB83F002CEB50 /* Search */,
 				D805D0C91EA8A7900003B9BC /* Home */,
@@ -145,6 +158,15 @@
 				D805D0C11EA88E170003B9BC /* GoogleService-Info.plist */,
 			);
 			path = "Chat App";
+			sourceTree = "<group>";
+		};
+		D87DE0631EB0995E0039A638 /* New Message */ = {
+			isa = PBXGroup;
+			children = (
+				D87DE0641EB099850039A638 /* NewMessageController.swift */,
+				D87DE06C1EB0C9E20039A638 /* UserCell.swift */,
+			);
+			name = "New Message";
 			sourceTree = "<group>";
 		};
 		D8A4A2851E9D3F0800F54B68 /* Util */ = {
@@ -177,6 +199,9 @@
 			children = (
 				D8AE6EBF1EAA805E00820525 /* MenuDelegate.swift */,
 				D81CCB4B1EAF6C08007770AE /* SearchDelegate.swift */,
+				D87DE0681EB0BE390039A638 /* EmptyCellDelegate.swift */,
+				D87DE06A1EB0C61D0039A638 /* DatabaseService + fetchUsers.swift */,
+				D87DE06E1EB0D2720039A638 /* SearchCellDelegate.swift */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -204,6 +229,7 @@
 		D8B604D91EAEB83F002CEB50 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				D87DE0661EB0BB590039A638 /* SearchBar.swift */,
 				D8B604DA1EAEB899002CEB50 /* SearchController.swift */,
 				D89600A11EAFB5320091FF98 /* SearchCell.swift */,
 			);
@@ -345,19 +371,25 @@
 				D8AE6ECA1EAABA0400820525 /* User.swift in Sources */,
 				D81D60791E9D2C4F00151664 /* AppDelegate.swift in Sources */,
 				D89600A21EAFB5320091FF98 /* SearchCell.swift in Sources */,
+				D87DE0651EB099850039A638 /* NewMessageController.swift in Sources */,
 				D8AE6ECC1EAAD04200820525 /* CustomImageView.swift in Sources */,
+				D87DE0671EB0BB590039A638 /* SearchBar.swift in Sources */,
 				D805D0C81EA88F5B0003B9BC /* StorageService.swift in Sources */,
 				D805D0C01EA88DB60003B9BC /* Alerter.swift in Sources */,
+				D87DE06D1EB0C9E20039A638 /* UserCell.swift in Sources */,
 				D8AE6EBD1EAA771C00820525 /* MenuController.swift in Sources */,
+				D87DE06F1EB0D2730039A638 /* SearchCellDelegate.swift in Sources */,
 				D8A4A2891E9D3F2400F54B68 /* UIView + Anchors.swift in Sources */,
 				D81CCB4C1EAF6C09007770AE /* SearchDelegate.swift in Sources */,
 				D8A4A28E1E9D518100F54B68 /* SignUpController.swift in Sources */,
 				D8AE6EC01EAA805E00820525 /* MenuDelegate.swift in Sources */,
 				D8AE6EC61EAA868B00820525 /* MenuItem.swift in Sources */,
+				D87DE06B1EB0C61D0039A638 /* DatabaseService + fetchUsers.swift in Sources */,
 				D8AE6EC81EAAB5EB00820525 /* MenuHeader.swift in Sources */,
 				D8B604DB1EAEB899002CEB50 /* SearchController.swift in Sources */,
 				D805D0C61EA88F5B0003B9BC /* AuthenticationService.swift in Sources */,
 				D8AE6EB91EAA667200820525 /* UIFont + avenirNextFont.swift in Sources */,
+				D87DE0691EB0BE390039A638 /* EmptyCellDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -16,6 +16,8 @@ class EmptyCell: UITableViewCell {
     fileprivate let sendButtonHeight: CGFloat = 36
     fileprivate static let sendButtonRadius: CGFloat = 18
     
+    weak var delegate: EmptyCellDelegate?
+    
     let backgroundCharacterImageView: UIImageView = {
         let iv = UIImageView()
         iv.image = #imageLiteral(resourceName: "background_character")
@@ -80,6 +82,6 @@ extension EmptyCell {
     }
     
     func handleSendMessage() {
-        print("Send message tapped")
+        delegate?.handleNewMessage()
     }
 }
