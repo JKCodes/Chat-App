@@ -12,10 +12,10 @@ class SearchCell: BaseCollectionViewCell {
     
     fileprivate let cellSpacing: CGFloat = 8
     fileprivate let profileImageHeight: CGFloat = 50
-    fileprivate let addButonLength: CGFloat = 20
+    fileprivate let addButonLength: CGFloat = 30
     fileprivate let usernameTopOffset: CGFloat = 15
     fileprivate let separatorHeight: CGFloat = 0.5
-    
+        
     var user: User? {
         didSet {
             guard let profileImageUrl = user?.profileImageUrl, let firstName = user?.firstName, let lastName = user?.lastName, let username = user?.username else { return }
@@ -24,8 +24,14 @@ class SearchCell: BaseCollectionViewCell {
             usernameLabel.text = "@\(username)"
             
             profileImageView.loadImage(urlString: profileImageUrl)
+            
+            delegate?.isFriend(user: user!, onComplete: { [weak self] (isFriend) in
+                self?.setButtonImage(isFriend: isFriend)
+            })
         }
     }
+    
+    weak var delegate: SearchDelegate?
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -49,9 +55,12 @@ class SearchCell: BaseCollectionViewCell {
         return label
     }()
     
-    let addButton: UIButton = {
+    lazy var addButton: UIButton = { [weak self] in
+        guard let this = self else { return UIButton() }
+        
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "addfriend_btn"), for: .normal)
+        button.addTarget(this, action: #selector(handleAdd), for: .touchUpInside)
         return button
     }()
     
@@ -76,8 +85,24 @@ class SearchCell: BaseCollectionViewCell {
         profileImageView.layer.cornerRadius = profileImageHeight / 2
         fullnameLabel.anchor(top: topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: nil, topConstant: usernameTopOffset, leftConstant: cellSpacing * 2, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
         usernameLabel.anchor(top: fullnameLabel.bottomAnchor, left: fullnameLabel.leftAnchor, bottom: nil, right: nil, topConstant: cellSpacing / 2, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
-        addButton.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: cellSpacing * 2.5, widthConstant: 0, heightConstant: 0)
+        addButton.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: cellSpacing * 2.5, widthConstant: addButonLength, heightConstant: addButonLength)
         addButton.anchorCenterYToSuperview()
         separatorView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: separatorHeight)
+    }
+}
+
+extension SearchCell {
+    func handleAdd() {
+        guard let user = user else { return }
+        
+        delegate?.addRemoveFriend(user: user)  
+    }
+    
+    fileprivate func setButtonImage(isFriend: Bool) {
+        if isFriend {
+            addButton.setImage(#imageLiteral(resourceName: "clear_btn"), for: .normal)
+        } else {
+            addButton.setImage(#imageLiteral(resourceName: "addfriend_btn"), for: .normal)
+        }
     }
 }

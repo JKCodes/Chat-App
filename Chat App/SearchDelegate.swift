@@ -9,5 +9,6 @@
 import UIKit
 
 protocol SearchDelegate: class {
-    func getUsers()
+    func addRemoveFriend(user: User)
+    func isFriend(user: User, onComplete: @escaping (Bool) -> Void)
 }

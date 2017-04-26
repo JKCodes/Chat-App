@@ -112,7 +112,7 @@ extension HomeController {
     fileprivate func fetchUser(id: String, completion: @escaping (User) -> ()) {
         DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: id, secondChild: nil, propagate: nil, sortBy: nil) { (snapshot) in
             guard let userDictionary = snapshot.value as? Dictionary<String, Any> else { return }
-            let user = User(dictionary: userDictionary)
+            let user = User(uid: snapshot.key, dictionary: userDictionary)
             
             completion(user)
         }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate {
+class SearchController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, SearchDelegate, Alerter {
     
     fileprivate let cellId = "cellId"
     fileprivate let cellHeight: CGFloat = 80
@@ -16,6 +16,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate let searchBarleftSpacing: CGFloat = 100
     
     fileprivate let window = UIApplication.shared.keyWindow
+    fileprivate let currentUserId = AuthenticationService.shared.currentId()
     
     lazy var searchBar: UISearchBar = { [weak self] in
         guard let this = self else { return UISearchBar() }
@@ -32,6 +33,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         collectionView?.backgroundColor = .white
 
         navigationController?.navigationBar.addSubview(searchBar)
@@ -54,8 +56,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! SearchCell
+        cell.delegate = self
         cell.user = filteredUsers[indexPath.item]
-        
         return cell
     }
     
@@ -67,9 +69,20 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         return 0
     }
     
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let user = filteredUsers[indexPath.item]
+        addRemoveFriend(user: user)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchBar.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchBar.isHidden = true
+        searchBar.resignFirstResponder()
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
@@ -87,7 +100,7 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
 extension SearchController {
     
     fileprivate func fetchUsers() {
-        guard let uid = AuthenticationService.shared.currentId() else { return }
+        guard let uid = currentUserId else { return }
         
         DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: nil, secondChild: nil, propagate: nil, sortBy: nil) { [weak self] (snapshot) in
             guard let this = self, let dictionaries = snapshot.value as? [String: Any] else { return }
@@ -99,7 +112,7 @@ extension SearchController {
                 
                 guard let userDictionary = value as? [String: Any] else { return }
                 
-                let user = User(dictionary: userDictionary)
+                let user = User(uid: key, dictionary: userDictionary)
                 this.users.append(user)
             })
             
@@ -109,6 +122,67 @@ extension SearchController {
             
             this.filteredUsers = this.users
             this.collectionView?.reloadData()
+        }
+    }
+    
+    
+    func addRemoveFriend(user: User) {
+        
+        isFriend(user: user, onComplete: { [weak self] (isFriend) in
+            guard let this = self else { return }
+            if isFriend {
+                this.removeFriend(user: user, onComplete: { (completed) in
+                    if !completed {
+                        return
+                    }
+                })
+            } else {
+                this.addFriend(user: user, onComplete: { (completed) in
+                    if !completed {
+                        return
+                    }
+                })
+            }
+            this.collectionView?.reloadData()
+        })
+    }
+    
+    fileprivate func addFriend(user: User, onComplete: @escaping (Bool) -> Void) {
+        guard let uid = currentUserId else { return }
+        let values = [user.uid: 1] as [String: AnyObject]
+        DatabaseService.shared.saveData(type: .following, data: values, firstChild: uid, secondChild: nil, appendAutoId: false) { [weak self] (error, _) in
+            guard let this = self else { return }
+            if error != nil {
+                this.present(this.alertVC(title: "Error saving data", message: "An unexpected error has occurred while adding a friend. Please try again."), animated: true, completion: nil)
+                onComplete(false)
+            }
+            onComplete(true)
+        }
+    }
+    
+    fileprivate func removeFriend(user: User, onComplete: @escaping (Bool) -> Void) {
+        guard let uid = currentUserId else { return }
+        
+        DatabaseService.shared.remove(type: .following, firstChild: uid, secondChild: user.uid) { [weak self] (error, _) in
+            guard let this = self else { return }
+            if error != nil {
+                this.present(this.alertVC(title: "Error saving data", message: "An unexpected error has occurred while removing a friend. Please try again."), animated: true, completion: nil)
+                onComplete(false)
+            }
+            onComplete(true)
+        }
+        
+    }
+    
+    func isFriend(user: User, onComplete: @escaping (Bool) -> Void) {
+        guard let uid = currentUserId else { return }
+        
+        DatabaseService.shared.retrieveOnce(type: .following, eventType: .value, firstChild: uid, secondChild: nil, propagate: nil, sortBy: nil) { (snapshot) in
+            if snapshot.hasChild(user.uid) {
+                onComplete(true)
+            } else {
+                onComplete(false)
+            }
         }
     }
     
