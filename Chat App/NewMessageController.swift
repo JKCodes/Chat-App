@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCellDelegate {
+class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCellDelegate, Alerter {
     
     
     fileprivate let cellId = "cellId"
@@ -16,8 +16,6 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     fileprivate let contentSpacing: CGFloat = 8
     fileprivate let searchBarLeftSpacing: CGFloat = 100
 
-    fileprivate let window = UIApplication.shared.keyWindow
-    fileprivate let currentUserId = AuthenticationService.shared.currentId()
     
     let searchBar = SearchBar()
     
@@ -26,6 +24,8 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateUsers), name: SearchController.updateUsersNotificationName, object: nil)
         
         navigationController?.navigationBar.addSubview(searchBar)
         
@@ -41,6 +41,10 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
         
         tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
         
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -64,6 +68,12 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
         let user = filteredUsers[indexPath.row]
         
         userSelected(user: user)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if users.isEmpty {
+            present(alertVC(title: "Notice", message: "It looks like you haven't added any friends to chat with.  Why don't you add one or two friends and try again?"), animated: true, completion: nil)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -94,8 +104,13 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
 }
 
 extension NewMessageController {
+    
+    func handleUpdateUsers() {
+        tableView?.reloadData()
+    }
+    
     func fetchUsers() {
-        DatabaseService.shared.fetchUsers { [weak self] (fetchedUsers) in
+        DatabaseService.shared.fetchFollowingUsers { [weak self] (fetchedUsers) in
             self?.users = fetchedUsers
             self?.filteredUsers = fetchedUsers
             

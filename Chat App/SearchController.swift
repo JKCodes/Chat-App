@@ -18,6 +18,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     fileprivate let window = UIApplication.shared.keyWindow
     fileprivate let currentUserId = AuthenticationService.shared.currentId()
     
+    static internal let updateUsersNotificationName = NSNotification.Name(rawValue: "UpdateUsers")
+    
     let searchBar = SearchBar()
     
     fileprivate var filteredUsers = [User]()
@@ -126,6 +128,7 @@ extension SearchController {
                 })
             }
             this.collectionView?.reloadData()
+            NotificationCenter.default.post(name: SearchController.updateUsersNotificationName, object: nil)
         })
     }
     
