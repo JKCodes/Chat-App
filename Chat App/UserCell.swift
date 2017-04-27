@@ -25,8 +25,6 @@ class UserCell: UITableViewCell {
         }
     }
     
-    weak var delegate: SearchCellDelegate?
-    
     let profileImageView: CustomImageView = {
         let imageView = CustomImageView()
         imageView.layer.cornerRadius = UserCell.profileImageRadius
@@ -35,12 +33,9 @@ class UserCell: UITableViewCell {
         return imageView
     }()
     
-    lazy var messageButton: UIButton = { [weak self] in
-        guard let this = self else { return UIButton() }
-        
+    let messageButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "selectcontact_btn"), for: .normal)
-        button.addTarget(this, action: #selector(handleMessage), for: .touchUpInside)
         return button
     }()
 
@@ -81,10 +76,5 @@ extension UserCell {
         detailTextLabel?.font = UIFont.avenirNextFont(size: 14, bold: false)
         detailTextLabel?.textColor = UIColor(white: 0, alpha: 0.5)
         
-    }
-    
-    func handleMessage() {
-        guard let user = user else { return }
-        delegate?.userSelected(user: user)
     }
 }

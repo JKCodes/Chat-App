@@ -22,6 +22,7 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     fileprivate var filteredUsers = [User]()
     fileprivate var users = [User]()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -54,7 +55,6 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! UserCell
         
-        cell.delegate = self
         cell.user = filteredUsers[indexPath.row]
         
         return cell
@@ -65,9 +65,10 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let user = filteredUsers[indexPath.row]
+        let user = users[indexPath.row]
         
-        userSelected(user: user)
+        showChatController(user: user)
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -120,7 +121,10 @@ extension NewMessageController {
         }
     }
     
-    func userSelected(user: User) {
-        print("selected")
+    func showChatController(user: User) {
+        let layout = UICollectionViewFlowLayout()
+        let chatLogController = ChatLogController(collectionViewLayout: layout)
+        chatLogController.user = user
+        navigationController?.pushViewController(chatLogController, animated: true)
     }
 }

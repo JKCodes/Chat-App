@@ -82,33 +82,34 @@ class DatabaseService {
             ref = ref.childByAutoId()
         }
         
-        ref.updateChildValues(data) { [weak self] (error, ref) in
-            if error != nil {
-                onComplete?("Error saving data to the database", nil)
-            }
-    
-            if fan {
-                self?.saveFanData(childRef: ref, firstChild: firstChild, secondChild: secondChild, onComplete: onComplete)
-            } else {
+        if fan {
+            saveFanData(childRef: ref, data: data, firstChild: firstChild, secondChild: secondChild, onComplete: onComplete)
+
+        } else {
+            ref.updateChildValues(data) { (error, ref) in
+                if error != nil {
+                    onComplete?("Error saving data to the database", nil)
+                }
+                
                 onComplete?(nil, ref)
             }
         }
+        
+
     }
     
-    fileprivate func saveFanData(childRef: FIRDatabaseReference, firstChild: String?, secondChild: String?, onComplete: DatabaseReferenceCompletion?) {
+    fileprivate func saveFanData(childRef: FIRDatabaseReference, data: Dictionary<String, AnyObject>, firstChild: String?, secondChild: String?, onComplete: DatabaseReferenceCompletion?) {
         guard let first = firstChild, let second = secondChild else { return }
         
         let senderRef = childRef.child(first).child(second)
         let receiverRef = childRef.child(second).child(first)
-        
-        let typeId = childRef.key
-        
-        senderRef.updateChildValues([typeId: 1]) { (error, ref) in
+                
+        senderRef.updateChildValues(data) { (error, ref) in
             if error != nil {
                 onComplete?("Error saving data to the database", nil)
             }
         
-            receiverRef.updateChildValues([typeId: 1]) { (error, _) in
+            receiverRef.updateChildValues(data) { (error, _) in
                 if error != nil {
                     onComplete?("Error saving data to the database", nil)
                 }
@@ -131,7 +132,6 @@ class DatabaseService {
         } else {
             if sort == "" {
                 ref.observeSingleEvent(of: eventType, with: { (snapshot) in
-                    
                     onComplete?(snapshot)
                     
                 }, withCancel: nil)

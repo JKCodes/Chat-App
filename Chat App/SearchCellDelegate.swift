@@ -9,5 +9,4 @@
 import Foundation
 
 protocol SearchCellDelegate: class {
-    func userSelected(user: User)
 }
