@@ -14,6 +14,49 @@ class UserCell: UITableViewCell {
     fileprivate let contentOffset: CGFloat = 8
     fileprivate let textFieldLeftConstant: CGFloat = 82
     fileprivate let messageButtonLength: CGFloat = 30
+    fileprivate let timeLabelWidth: CGFloat = 100
+
+    
+    var message: Message? {
+        
+        didSet {
+            setupNameAndProfileImage()
+            
+            messageButton.setImage(nil, for: .normal)
+            
+            if let chatPartnerId = message?.toId {
+                
+                var displayText = ""
+                
+                if let text = message?.text {
+                    displayText = text
+                }
+                
+                detailTextLabel?.text = chatPartnerId == AuthenticationService.shared.currentId() ? displayText : "You: \(displayText)"
+                
+            }
+            
+            if let timeStamp = message?.timestamp, let seconds = Double(timeStamp) {
+                let timestampeDate = Date(timeIntervalSince1970: seconds)
+                let elapsedTimeInSeconds = Date().timeIntervalSince(timestampeDate)
+                let secondsInADay: TimeInterval = 60 * 60 * 24
+                
+                let dateFormatter = DateFormatter()
+                
+                if elapsedTimeInSeconds > 7 * secondsInADay {
+                    dateFormatter.dateFormat = "MM/dd/yy"
+                } else if elapsedTimeInSeconds > secondsInADay {
+                    dateFormatter.dateFormat = "EEE"
+                } else {
+                    dateFormatter.dateFormat = "hh:mm:ss a"
+                }
+                
+                timeLabel.text = dateFormatter.string(from: timestampeDate)
+            }
+            
+        }
+    }
+    
     
     var user: User? {
         didSet {
@@ -33,6 +76,13 @@ class UserCell: UITableViewCell {
         return imageView
     }()
     
+    let timeLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = .darkGray
+        return label
+    }()
+    
     let messageButton: UIButton = {
         let button = UIButton()
         button.setImage(#imageLiteral(resourceName: "selectcontact_btn"), for: .normal)
@@ -44,15 +94,18 @@ class UserCell: UITableViewCell {
 
         addSubview(profileImageView)
         addSubview(messageButton)
+        addSubview(timeLabel)
         
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, topConstant: 0, leftConstant: contentOffset * 2, bottomConstant: 0, rightConstant: 0, widthConstant: profileImageLength, heightConstant: profileImageLength)
         profileImageView.anchorCenterYToSuperview()
         messageButton.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: contentOffset * 2.5, widthConstant: messageButtonLength, heightConstant: messageButtonLength)
         messageButton.anchorCenterYToSuperview()
+        timeLabel.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: contentOffset * 2, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: timeLabelWidth, heightConstant: 0)
         
         setupCell()
 
     }
+    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -70,6 +123,23 @@ class UserCell: UITableViewCell {
 }
 
 extension UserCell {
+    fileprivate func setupNameAndProfileImage() {
+        
+        if let id = message?.chatPartnerId() {
+            DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: id, secondChild: nil, propagate: nil, sortBy: nil, onComplete: { [weak self] (snapshot) in
+                
+                if let dictionary = snapshot.value as? [String: AnyObject] {
+                    guard let firstName = dictionary["firstName"], let lastName = dictionary["lastName"], let username = dictionary["username"] else { return }
+                    self?.textLabel?.text = "\(firstName) \(lastName) (@\(username))"
+                    
+                    if let profileImageUrl = dictionary["profileImageUrl"] as? String {
+                        self?.profileImageView.loadImage(urlString: profileImageUrl)
+                    }
+                    
+                }
+            })
+        }
+    }
     
     fileprivate func setupCell() {
         textLabel?.font = UIFont.avenirNextFont(size: 20, bold: true)
