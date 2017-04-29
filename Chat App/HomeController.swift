@@ -37,6 +37,10 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(handleRefreshHome), name: LoginController.refreshHomeNotificationName, object: nil)
+        
+        checkIfLoggedIn()
+        
         navigationItem.title = "MSG"
         
         let searchBarButton = UIBarButtonItem(image: #imageLiteral(resourceName: "searchbutton"), style: .plain, target: self, action: #selector(handleSearch))
@@ -53,8 +57,11 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
         tableView.allowsMultipleSelectionDuringEditing = true
     }
     
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
-        checkIfLoggedIn()
 
         guard let id = AuthenticationService.shared.currentId() else { return }
         if currentUserId != id {
@@ -189,6 +196,10 @@ extension HomeController {
     func handleMenu() {
         menuController.showMenu()
     }
+    
+    func handleRefreshHome() {
+        checkIfLoggedIn()
+    }
 }
 
 // MARK: - Others
@@ -261,10 +272,18 @@ extension HomeController {
         if menuItem.name == .logout {
             handleLogout()
         } else {
-            let vc = UIViewController()
-            vc.navigationItem.title = menuItem.name.rawValue
-            vc.view.backgroundColor = .white
-            navigationController?.pushViewController(vc, animated: true)
+            
+            switch menuItem.name {
+            case .profile:
+                navigationController?.pushViewController(ProfileController(), animated: true)
+            case .help:
+                navigationController?.pushViewController(HelpController(), animated: true)
+            case .notification:
+                navigationController?.pushViewController(NotificationController(), animated: true)
+            case .settings:
+                navigationController?.pushViewController(SettingsController(), animated: true)
+            default: break
+            }
         }
     }
     

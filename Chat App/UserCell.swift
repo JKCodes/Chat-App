@@ -15,7 +15,7 @@ class UserCell: UITableViewCell {
     fileprivate let textFieldLeftConstant: CGFloat = 82
     fileprivate let messageButtonLength: CGFloat = 30
     fileprivate let timeLabelWidth: CGFloat = 100
-
+    fileprivate let timeLabelRightSpacing: CGFloat = 20
     
     var message: Message? {
         
@@ -80,6 +80,7 @@ class UserCell: UITableViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13)
         label.textColor = .darkGray
+        label.textAlignment = .right
         return label
     }()
     
@@ -100,7 +101,7 @@ class UserCell: UITableViewCell {
         profileImageView.anchorCenterYToSuperview()
         messageButton.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: contentOffset * 2.5, widthConstant: messageButtonLength, heightConstant: messageButtonLength)
         messageButton.anchorCenterYToSuperview()
-        timeLabel.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: contentOffset * 2, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: timeLabelWidth, heightConstant: 0)
+        timeLabel.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: contentOffset * 2, leftConstant: 0, bottomConstant: 0, rightConstant: timeLabelRightSpacing, widthConstant: timeLabelWidth, heightConstant: 0)
         
         setupCell()
 

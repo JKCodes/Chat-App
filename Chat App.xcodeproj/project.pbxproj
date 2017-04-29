@@ -38,7 +38,6 @@
 		D8AA30C71EB14DE500BF0587 /* NewMessageDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AA30C61EB14DE500BF0587 /* NewMessageDelegate.swift */; };
 		D8AE6EB71EAA5BAE00820525 /* EmptyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EB61EAA5BAE00820525 /* EmptyCell.swift */; };
 		D8AE6EB91EAA667200820525 /* UIFont + avenirNextFont.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EB81EAA667200820525 /* UIFont + avenirNextFont.swift */; };
-		D8AE6EBB1EAA763F00820525 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EBA1EAA763F00820525 /* MenuView.swift */; };
 		D8AE6EBD1EAA771C00820525 /* MenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EBC1EAA771C00820525 /* MenuController.swift */; };
 		D8AE6EC01EAA805E00820525 /* MenuDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EBF1EAA805E00820525 /* MenuDelegate.swift */; };
 		D8AE6EC21EAA843C00820525 /* MenuItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EC11EAA843C00820525 /* MenuItemCell.swift */; };
@@ -47,6 +46,10 @@
 		D8AE6ECA1EAABA0400820525 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EC91EAABA0400820525 /* User.swift */; };
 		D8AE6ECC1EAAD04200820525 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6ECB1EAAD04200820525 /* CustomImageView.swift */; };
 		D8B604DB1EAEB899002CEB50 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B604DA1EAEB899002CEB50 /* SearchController.swift */; };
+		D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4961EB4AA1200AF193D /* ProfileController.swift */; };
+		D8F6F4991EB4AA2600AF193D /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4981EB4AA2600AF193D /* HelpController.swift */; };
+		D8F6F49B1EB4AA4E00AF193D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */; };
+		D8F6F49D1EB4AA5900AF193D /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F49C1EB4AA5900AF193D /* SettingsController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -85,7 +88,6 @@
 		D8AA30C61EB14DE500BF0587 /* NewMessageDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageDelegate.swift; sourceTree = "<group>"; };
 		D8AE6EB61EAA5BAE00820525 /* EmptyCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCell.swift; sourceTree = "<group>"; };
 		D8AE6EB81EAA667200820525 /* UIFont + avenirNextFont.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIFont + avenirNextFont.swift"; sourceTree = "<group>"; };
-		D8AE6EBA1EAA763F00820525 /* MenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		D8AE6EBC1EAA771C00820525 /* MenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuController.swift; sourceTree = "<group>"; };
 		D8AE6EBF1EAA805E00820525 /* MenuDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuDelegate.swift; sourceTree = "<group>"; };
 		D8AE6EC11EAA843C00820525 /* MenuItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItemCell.swift; sourceTree = "<group>"; };
@@ -94,6 +96,10 @@
 		D8AE6EC91EAABA0400820525 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D8AE6ECB1EAAD04200820525 /* CustomImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		D8B604DA1EAEB899002CEB50 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		D8F6F4961EB4AA1200AF193D /* ProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		D8F6F4981EB4AA2600AF193D /* HelpController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
+		D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		D8F6F49C1EB4AA5900AF193D /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,15 +166,15 @@
 		D81D60771E9D2C4F00151664 /* Chat App */ = {
 			isa = PBXGroup;
 			children = (
+				D8AE6EC41EAA867900820525 /* Model */,
+				D8AE6EBE1EAA804C00820525 /* Protocols */,
+				D8A4A2851E9D3F0800F54B68 /* Util */,
 				D8AA30BB1EB13C6700BF0587 /* Chat Log */,
 				D805D0C91EA8A7900003B9BC /* Home */,
 				D8A4A28C1E9D516400F54B68 /* Login/Signup */,
 				D8AE6EC31EAA844A00820525 /* Menu */,
-				D8AE6EC41EAA867900820525 /* Model */,
 				D87DE0631EB0995E0039A638 /* New Message */,
-				D8AE6EBE1EAA804C00820525 /* Protocols */,
 				D8B604D91EAEB83F002CEB50 /* Search */,
-				D8A4A2851E9D3F0800F54B68 /* Util */,
 			);
 			path = "Chat App";
 			sourceTree = "<group>";
@@ -234,7 +240,10 @@
 		D8AE6EC31EAA844A00820525 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
-				D8AE6EBA1EAA763F00820525 /* MenuView.swift */,
+				D8F6F4921EB4A98700AF193D /* Profile */,
+				D8F6F4941EB4A99C00AF193D /* Help */,
+				D8F6F4931EB4A99300AF193D /* Notification */,
+				D8F6F4951EB4A9A400AF193D /* Settings */,
 				D8AE6EBC1EAA771C00820525 /* MenuController.swift */,
 				D8AE6EC11EAA843C00820525 /* MenuItemCell.swift */,
 				D8AE6EC71EAAB5EB00820525 /* MenuHeader.swift */,
@@ -260,6 +269,38 @@
 				D89600A11EAFB5320091FF98 /* SearchCell.swift */,
 			);
 			name = Search;
+			sourceTree = "<group>";
+		};
+		D8F6F4921EB4A98700AF193D /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F4961EB4AA1200AF193D /* ProfileController.swift */,
+			);
+			name = Profile;
+			sourceTree = "<group>";
+		};
+		D8F6F4931EB4A99300AF193D /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */,
+			);
+			name = Notification;
+			sourceTree = "<group>";
+		};
+		D8F6F4941EB4A99C00AF193D /* Help */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F4981EB4AA2600AF193D /* HelpController.swift */,
+			);
+			name = Help;
+			sourceTree = "<group>";
+		};
+		D8F6F4951EB4A9A400AF193D /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				D8F6F49C1EB4AA5900AF193D /* SettingsController.swift */,
+			);
+			name = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -388,17 +429,20 @@
 			files = (
 				D8AE6EC21EAA843C00820525 /* MenuItemCell.swift in Sources */,
 				D805D0C71EA88F5B0003B9BC /* DatabaseService.swift in Sources */,
+				D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */,
 				D81D607B1E9D2C4F00151664 /* LoginController.swift in Sources */,
 				D8AA30C31EB1414500BF0587 /* Message.swift in Sources */,
-				D8AE6EBB1EAA763F00820525 /* MenuView.swift in Sources */,
+				D8F6F4991EB4AA2600AF193D /* HelpController.swift in Sources */,
 				D805D0CB1EA8A7B70003B9BC /* HomeController.swift in Sources */,
 				D8A4A28B1E9D40DB00F54B68 /* UIColor + rgb.swift in Sources */,
+				D8F6F49B1EB4AA4E00AF193D /* NotificationController.swift in Sources */,
 				D8A4A2871E9D3F1000F54B68 /* BaseCell.swift in Sources */,
 				D8AE6EB71EAA5BAE00820525 /* EmptyCell.swift in Sources */,
 				D8AE6ECA1EAABA0400820525 /* User.swift in Sources */,
 				D81D60791E9D2C4F00151664 /* AppDelegate.swift in Sources */,
 				D89600A21EAFB5320091FF98 /* SearchCell.swift in Sources */,
 				D87DE0651EB099850039A638 /* NewMessageController.swift in Sources */,
+				D8F6F49D1EB4AA5900AF193D /* SettingsController.swift in Sources */,
 				D8AE6ECC1EAAD04200820525 /* CustomImageView.swift in Sources */,
 				D8AA30BD1EB13C8B00BF0587 /* ChatLogController.swift in Sources */,
 				D87DE0671EB0BB590039A638 /* SearchBar.swift in Sources */,
