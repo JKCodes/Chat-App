@@ -19,10 +19,7 @@ class ProfileController: UIViewController {
     }
     
     override func viewDidLoad() {
-        view.backgroundColor = .white
-        navigationController?.isNavigationBarHidden = true
-        navigationItem.title = "Profile"
-        
+        view.backgroundColor = .white        
         profileView.delegate = self
         
         setupViews()
@@ -30,6 +27,11 @@ class ProfileController: UIViewController {
     
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.isNavigationBarHidden = true
     }
 }
 
@@ -52,6 +54,8 @@ extension ProfileController: ProfileViewDelegate {
     }
     
     func handleEditProfile(user: User) {
-        print("handling profile stuff")
+        let editVC = EditController()
+        editVC.user = user
+        navigationController?.pushViewController(editVC, animated: true)
     }
 }

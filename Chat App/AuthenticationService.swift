@@ -13,9 +13,8 @@ typealias UserCompletion = (_ errorMsg: String?, _ data: FIRUser?) -> Void
 typealias DeletionCompletion = () -> ()
 
 class AuthenticationService {
-    
-    
     fileprivate static let _shared = AuthenticationService()
+    fileprivate var currentCredential: FIRAuthCredential?
     
     static var shared: AuthenticationService {
         return _shared
@@ -35,18 +34,33 @@ class AuthenticationService {
             if let error = error {
                 self?.processFirebaseErrors(error: error as NSError, onComplete: onComplete)
             }
-            
+            self?.currentCredential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
             onComplete?(nil, user)
-            
         })
     }
+    
+    func renewEmailCredential(email: String, password: String) {
+        currentCredential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
+    }
  
+    func reauthenticate(onComplete: UserCompletion?) {
+        if currentCredential == nil { renewEmailCredential(email: "dummy@dummy.com", password: "dummy1234") }
+        FIRAuth.auth()?.currentUser?.reauthenticate(with: currentCredential!, completion: { [weak self] (error) in
+            if let error = error {
+                self?.processFirebaseErrors(error: error as NSError, onComplete: onComplete)
+            } else {
+                onComplete?(nil, nil)
+            }
+        })
+    }
+    
     
     func signIn(email: String, password: String, onComplete: UserCompletion?) {
         FIRAuth.auth()?.signIn(withEmail: email, password: password, completion: { [weak self] (user, error) in
             if let error = error {
                 self?.processFirebaseErrors(error: error as NSError, onComplete: onComplete)
             } else {
+                self?.currentCredential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
                 onComplete?(nil, user)
             }
         })

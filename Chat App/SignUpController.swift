@@ -248,12 +248,12 @@ extension SignUpController {
                 }
                 
                 guard let uid = user?.uid else { return }
-                this.saveDataToFirebase(uid: uid, firstName: firstName, lastName: lastName, username: username)
+                this.saveDataToFirebase(uid: uid, firstName: firstName, lastName: lastName, username: username, email: email)
             })
         }
     }
     
-    fileprivate func saveDataToFirebase(uid: String, firstName: String, lastName: String, username: String) {
+    fileprivate func saveDataToFirebase(uid: String, firstName: String, lastName: String, username: String, email: String) {
         guard let image = self.addProfileImageButton.imageView?.image, let uploadData = UIImageJPEGRepresentation(image, 0.3) else { return }
         
         StorageService.shared.uploadToStorage(type: .profile, data: uploadData, url: nil) { [weak self] (error, metadata) in
@@ -267,7 +267,7 @@ extension SignUpController {
             
             guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else { return }
             
-            var data = ["firstName": firstName, "lastName": lastName, "username": username, "profileImageUrl": profileImageUrl] as Dictionary<String, AnyObject>
+            var data = ["firstName": firstName, "lastName": lastName, "username": username, "profileImageUrl": profileImageUrl, "email": email] as Dictionary<String, AnyObject>
         
             DatabaseService.shared.saveData(type: .user, data: data, firstChild: uid, secondChild: nil, appendAutoId: false, onComplete: { (error, _) in
                 if let error = error {
