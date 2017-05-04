@@ -19,6 +19,7 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
     var messagesDictionary = [String: Message]()
     var timer: Timer?
     
+    var user: User?
     
     fileprivate let backgroundImageView: UIImageView = {
         let iv = UIImageView()
@@ -238,10 +239,10 @@ extension HomeController {
     
     
     fileprivate func fetchUser(id: String, completion: @escaping (User) -> ()) {
-        DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: id, secondChild: nil, propagate: nil, sortBy: nil) { (snapshot) in
+        DatabaseService.shared.retrieveOnce(type: .user, eventType: .value, firstChild: id, secondChild: nil, propagate: nil, sortBy: nil) { [weak self] (snapshot) in
             guard let userDictionary = snapshot.value as? Dictionary<String, Any> else { return }
             let user = User(uid: snapshot.key, dictionary: userDictionary)
-            
+            self?.user = user
             completion(user)
         }
     }
@@ -275,7 +276,10 @@ extension HomeController {
             
             switch menuItem.name {
             case .profile:
-                navigationController?.pushViewController(ProfileController(), animated: true)
+                guard let user = user else { return }
+                let profileController = ProfileController()
+                profileController.user = user
+                navigationController?.pushViewController(profileController, animated: true)
             case .help:
                 navigationController?.pushViewController(HelpController(), animated: true)
             case .notification:
