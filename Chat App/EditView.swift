@@ -8,24 +8,34 @@
 
 import UIKit
 
+protocol EditViewDelegate: class {
+    func handleEditProfileImage()
+    func handleSaveUserInfo(data: [String: AnyObject])
+}
+
 class EditView: UIView {
     
-    fileprivate let profileImageChanged = false
-    fileprivate let topSpacing: CGFloat = 80
+    internal var profileImageChanged: Bool = false
+    
+    internal static let topSpacing: CGFloat = 80
     fileprivate let profileImageLength: CGFloat =  150
-    fileprivate let contentOffset: CGFloat = 50
+    internal static let contentOffset: CGFloat = 50
     fileprivate let contentSpacing: CGFloat = 10
     fileprivate let stackViewHeight: CGFloat = 40 * 5 + 10 * 4
     fileprivate let editSignUpButtonHeight: CGFloat = 40
 
-    internal var editProfileTopConstraint: NSLayoutConstraint?
+    internal static var editProfileTopConstraint: NSLayoutConstraint?
     
     fileprivate static let redColor: UIColor = .rgb(r: 255, g: 51, b: 51)
     
+    weak var delegate: EditViewDelegate?
+    
     var user: User? {
         didSet {
-            guard let url = user?.profileImageUrl else { return }
-            profileImageView.loadImage(urlString: url)
+            if !profileImageChanged {
+                guard let url = user?.profileImageUrl else { return }
+                profileImageView.loadImage(urlString: url)
+            }
             firstnameField.text = user?.firstName
             lastnameField.text = user?.lastName
             usernameField.text = user?.username
@@ -49,7 +59,7 @@ class EditView: UIView {
     lazy var saveUserInfoButton: UIButton = { [unowned self] in
         let button = EditView.returnTemplateButton()
         button.setTitle("Save User Info", for: .normal)
-        button.addTarget(self, action: #selector(handleEditUserInfo), for: .touchUpInside)
+        button.addTarget(self, action: #selector(handleSaveUserInfo), for: .touchUpInside)
         return button
     }()
     
@@ -102,7 +112,7 @@ extension EditView {
         addSubview(profileImageView)
         addSubview(editProfileImgButton)
 
-        editProfileTopConstraint = profileImageView.anchorAndReturn(top: topAnchor, left: nil, bottom: nil, right: nil, topConstant: topSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: profileImageLength, heightConstant: profileImageLength)[0]
+        EditView.editProfileTopConstraint = profileImageView.anchorAndReturn(top: topAnchor, left: nil, bottom: nil, right: nil, topConstant: EditView.topSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: profileImageLength, heightConstant: profileImageLength)[0]
         profileImageView.anchorCenterXToSuperview()
 
         editProfileImgButton.anchor(top: profileImageView.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: editSignUpButtonHeight)
@@ -119,19 +129,27 @@ extension EditView {
         addSubview(stackView)
         addSubview(saveUserInfoButton)
         
-        stackView.anchor(top: editProfileImgButton.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, topConstant: contentSpacing, leftConstant: contentOffset, bottomConstant: 0, rightConstant: contentOffset, widthConstant: 0, heightConstant: stackViewHeight)
-        saveUserInfoButton.anchor(top: stackView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, topConstant: contentSpacing, leftConstant: contentOffset, bottomConstant: 0, rightConstant: contentOffset, widthConstant: 0, heightConstant: editSignUpButtonHeight)
+        stackView.anchor(top: editProfileImgButton.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, topConstant: contentSpacing, leftConstant: EditView.contentOffset, bottomConstant: 0, rightConstant: EditView.contentOffset, widthConstant: 0, heightConstant: stackViewHeight)
+        saveUserInfoButton.anchor(top: stackView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, topConstant: contentSpacing, leftConstant: EditView.contentOffset, bottomConstant: 0, rightConstant: EditView.contentOffset, widthConstant: 0, heightConstant: editSignUpButtonHeight)
     }
 }
 
 // MARK: - Handlers
 extension EditView {
     func handleEditProfileImage() {
-        print("edit profile tapped")
+        delegate?.handleEditProfileImage()
     }
     
-    func handleEditUserInfo() {
-        print("user Info change tapped")
+    func handleSaveUserInfo() {
+        guard let firstName = firstnameField.text, let lastName = lastnameField.text, let username = usernameField.text, let password = passwordField.text, let email = emailField.text else { return }
+        var data = [String: AnyObject]()
+        if firstName != user?.firstName { data["firstName"] = firstName as AnyObject }
+        if lastName != user?.lastName { data["lastName"] = lastName as AnyObject }
+        if username != user?.username { data["username"] = username as AnyObject }
+        if email != user?.email { data["email"] = email as AnyObject }
+        if !password.isEmpty { data["password"] = password as AnyObject }
+
+        delegate?.handleSaveUserInfo(data: data)
     }
 }
 

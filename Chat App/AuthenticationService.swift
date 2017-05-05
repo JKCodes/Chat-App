@@ -83,6 +83,26 @@ class AuthenticationService {
         })
     }
     
+    func updateEmail(email: String, onComplete: UserCompletion?) {
+        FIRAuth.auth()?.currentUser?.updateEmail(email, completion: { [weak self] (error) in
+            if let error = error {
+                self?.processFirebaseErrors(error: error as NSError, onComplete: onComplete)
+            } else {
+                onComplete?(nil, nil)
+            }
+        })
+    }
+    
+    func updatePassword(password: String, onComplete: UserCompletion?) {
+        FIRAuth.auth()?.currentUser?.updatePassword(password, completion: { [weak self] (error) in
+            if let error = error {
+                self?.processFirebaseErrors(error: error as NSError, onComplete: onComplete)
+            } else {
+                onComplete?(nil, nil)
+            }
+        })
+    }
+    
     fileprivate func processFirebaseErrors(error: NSError, onComplete: UserCompletion?) {
         if let errorCode = FIRAuthErrorCode(rawValue: error._code) {
             switch errorCode {
