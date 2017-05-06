@@ -50,12 +50,12 @@ extension ProfileController {
 extension ProfileController: ProfileViewDelegate {
     func handleBack() {
         navigationController?.popViewController(animated: true)
-        navigationController?.isNavigationBarHidden = false
     }
     
     func handleEditProfile(user: User) {
         let editVC = EditController()
         editVC.user = user
+        navigationController?.popViewController(animated: true)
         navigationController?.pushViewController(editVC, animated: true)
     }
 }

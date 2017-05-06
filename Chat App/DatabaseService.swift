@@ -12,6 +12,7 @@ import FirebaseDatabase
 typealias DataSnapshotCompletion = (_ metadata: FIRDataSnapshot) -> Void
 typealias DatabaseReferenceCompletion = (_ errorMsg: String?, _ ref: FIRDatabaseReference?) -> Void
 
+fileprivate let FIR_CHILD_EMAILS = "emails"
 fileprivate let FIR_CHILD_USERS = "users"
 fileprivate let FIR_CHILD_USERNAMES = "usernames"
 fileprivate let FIR_CHILD_PROFILE = "profile"
@@ -21,6 +22,7 @@ fileprivate let FIR_CHILD_POSTS = "posts"
 fileprivate let FIR_CHILD_FOLLOWING = "following"
 
 enum DataTypes: String {
+    case email
     case user
     case username
     case message
@@ -39,6 +41,10 @@ class DatabaseService {
     
     var rootRef: FIRDatabaseReference {
         return FIRDatabase.database().reference()
+    }
+    
+    var emailsRef: FIRDatabaseReference {
+        return rootRef.child(FIR_CHILD_EMAILS)
     }
     
     var usersRef: FIRDatabaseReference {
@@ -65,9 +71,11 @@ class DatabaseService {
         return rootRef.child(FIR_CHILD_FOLLOWING)
     }
     
-    func isUsernameUnique(username: String, onComplete: @escaping (_ flag: Bool) -> Void) {
-        usernamesRef.observeSingleEvent(of: .value, with: { (snapshot) in
-            if snapshot.hasChild(username) {
+    func isUnique(type: DataTypes, eventType: FIRDataEventType,  query: String, onComplete: @escaping (_ flag: Bool) -> Void) {
+        guard let ref = getRef(type: type, firstChild: nil, secondChild: nil) else { return }
+        
+        ref.observeSingleEvent(of: eventType, with: { (snapshot) in
+            if snapshot.hasChild(query) {
                 onComplete(false)
             } else {
                 onComplete(true)
@@ -211,6 +219,7 @@ class DatabaseService {
         var ref: FIRDatabaseReference
         
         switch type {
+        case .email: ref = emailsRef
         case .user: ref = usersRef
         case .message: ref = messagesRef
         case .username: ref = usernamesRef

@@ -50,11 +50,13 @@ class SignUpController: UIViewController, UITextFieldDelegate, Alerter, UIImageP
     
     let usernameField: UITextField = {
         let tf = SignUpController.baseTextField(placeholder: "Username")
+        tf.autocapitalizationType = .none
         return tf
     }()
     
     let emailField: UITextField = {
         let tf = SignUpController.baseTextField(placeholder: "Email")
+        tf.autocapitalizationType = .none
         tf.keyboardType = .emailAddress
         return tf
     }()
@@ -206,7 +208,7 @@ extension SignUpController {
     }
     
     func handleSignUp() {
-        guard let firstName = firstnameField.text, let lastName = lastnameField.text, let username = usernameField.text, let password = passwordField.text, let email = emailField.text else { return }
+        guard let firstName = firstnameField.text, let lastName = lastnameField.text, let username = usernameField.text, let password = passwordField.text, let email = emailField.text?.lowercased() else { return }
         if firstName.characters.count < 1 || lastName.characters.count < 1 || username.characters.count < 1 || password.characters.count < 1 || email.characters.count < 1 {
             present(alertVC(title: "The Form is Incomplete", message: "All Fields are Required"), animated: true, completion: nil)
             return
@@ -240,7 +242,7 @@ extension SignUpController {
                 return
             }
             
-            DatabaseService.shared.isUsernameUnique(username: username, onComplete: { (flag) in
+            DatabaseService.shared.isUnique(type: .username, eventType: .value, query: username, onComplete: { (flag) in
                 if !flag {
                     this.present(this.alertVC(title: "Duplicate username", message: "The chosen username has already been taken.  Please choose a different username"), animated: true, completion: nil)
                     AuthenticationService.shared.deleteCurrentUser { return }
@@ -254,9 +256,9 @@ extension SignUpController {
     }
     
     fileprivate func saveDataToFirebase(uid: String, firstName: String, lastName: String, username: String, email: String) {
-        guard let image = self.addProfileImageButton.imageView?.image, let uploadData = UIImageJPEGRepresentation(image, 0.3) else { return }
+        guard let image = self.addProfileImageButton.imageView?.image, let uploadData = UIImageJPEGRepresentation(image, 0.3), let uid = AuthenticationService.shared.currentId() else { return }
         
-        StorageService.shared.uploadToStorage(type: .profile, data: uploadData, url: nil) { [weak self] (error, metadata) in
+        StorageService.shared.uploadToStorage(type: .profile, data: uploadData, url: nil, filename: uid) { [weak self] (error, metadata) in
             guard let this = self else { return }
 
             if let error = error {

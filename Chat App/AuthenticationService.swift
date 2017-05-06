@@ -35,7 +35,19 @@ class AuthenticationService {
                 self?.processFirebaseErrors(error: error as NSError, onComplete: onComplete)
             }
             self?.currentCredential = FIREmailPasswordAuthProvider.credential(withEmail: email, password: password)
-            onComplete?(nil, user)
+            
+            
+            
+            let data = [email.replacingOccurrences(of: ".", with: "%2E"): 1] as Dictionary<String, AnyObject>
+            
+            DatabaseService.shared.saveData(type: .email, data: data, firstChild: nil, secondChild: nil, appendAutoId: false, onComplete: { (error, _) in
+                if error != nil {
+                    AuthenticationService.shared.deleteCurrentUser { return }
+                    return
+                }
+                
+                onComplete?(nil, user)
+            })
         })
     }
     

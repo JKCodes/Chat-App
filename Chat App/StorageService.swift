@@ -46,7 +46,19 @@ class StorageService {
         return rootRef.child(FIR_CHILD_VIDEO)
     }
     
-    func uploadToStorageAndReturn(type: StorageTypes, data: Data?, url: URL?, onComplete: StorageMetadataCompletion?) -> FIRStorageUploadTask {
+    func delete(type: StorageTypes, url: URL, onCompletion: ((_ error: String?) -> Void)?) {
+        let ref = getRef(type: type)
+        
+        ref.delete { (error) in
+            if error != nil {
+                onCompletion?("Error deleting from storage")
+            } else {
+                onCompletion?(nil)
+            }
+        }
+    }
+    
+    func uploadToStorageAndReturn(type: StorageTypes, data: Data?, url: URL?, filename: String = "", onComplete: StorageMetadataCompletion?) -> FIRStorageUploadTask {
         
         let uploadTask: FIRStorageUploadTask?
         
@@ -55,10 +67,12 @@ class StorageService {
         
         let ref: FIRStorageReference
         
+        let name = filename == "" ? NSUUID().uuidString : filename
+        
         switch type {
-        case .profile: ref = profileRef.child("\(NSUUID().uuidString).jpg")
-        case .image: ref = messageImgRef.child("\(NSUUID().uuidString).jpg")
-        case .video: ref = messageVideoRef.child("\(NSUUID().uuidString).mov")
+        case .profile: ref = profileRef.child("\(name).jpg")
+        case .image: ref = messageImgRef.child("\(name).jpg")
+        case .video: ref = messageVideoRef.child("\(name).mov")
         }
         
         if type != .video {
@@ -83,8 +97,16 @@ class StorageService {
         return uploadTask!
     }
     
-    func uploadToStorage(type: StorageTypes, data: Data?, url: URL?, onComplete: StorageMetadataCompletion?) {
-        _ = uploadToStorageAndReturn(type: type, data: data, url: url, onComplete: onComplete)
+    func uploadToStorage(type: StorageTypes, data: Data?, url: URL?, filename: String = "", onComplete: StorageMetadataCompletion?) {
+        _ = uploadToStorageAndReturn(type: type, data: data, url: url, filename: filename, onComplete: onComplete)
+    }
+    
+    fileprivate func getRef(type: StorageTypes) -> FIRStorageReference {
+        switch type {
+        case .image: return messageImgRef
+        case .profile: return profileRef
+        case .video: return messageVideoRef
+        }
     }
     
 }

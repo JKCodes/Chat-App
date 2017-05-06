@@ -141,13 +141,21 @@ extension EditView {
     }
     
     func handleSaveUserInfo() {
-        guard let firstName = firstnameField.text, let lastName = lastnameField.text, let username = usernameField.text, let password = passwordField.text, let email = emailField.text else { return }
+        guard let firstName = firstnameField.text,
+            let lastName = lastnameField.text,
+            let username = usernameField.text?.trimmingCharacters(in: .whitespaces),
+            let password = passwordField.text,
+            let email = emailField.text?.trimmingCharacters(in: .whitespaces),
+            let profileImageUrl = profileImageView.lastURLUsedToLoadImage
+            else { return }
+        
         var data = [String: AnyObject]()
         if firstName != user?.firstName { data["firstName"] = firstName as AnyObject }
         if lastName != user?.lastName { data["lastName"] = lastName as AnyObject }
         if username != user?.username { data["username"] = username as AnyObject }
         if email != user?.email { data["email"] = email as AnyObject }
         if !password.isEmpty { data["password"] = password as AnyObject }
+        if profileImageChanged { data["profileImageUrl"] = profileImageUrl as AnyObject}
 
         delegate?.handleSaveUserInfo(data: data)
     }

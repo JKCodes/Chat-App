@@ -63,6 +63,7 @@ class LoginView: UIView {
         tf.borderStyle = .roundedRect
         tf.placeholder = "Email"
         tf.keyboardType = .emailAddress
+        tf.autocapitalizationType = .none
         return tf
     }()
     

@@ -39,6 +39,7 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleRefreshHome), name: LoginController.refreshHomeNotificationName, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(handleRefreshData), name: EditController.refreshDataNotificationName, object: nil)
         
         checkIfLoggedIn()
         
@@ -64,6 +65,8 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
     
     override func viewWillAppear(_ animated: Bool) {
 
+        navigationController?.isNavigationBarHidden = false
+        
         guard let id = AuthenticationService.shared.currentId() else { return }
         if currentUserId != id {
             setCurrentUser()
@@ -200,6 +203,10 @@ extension HomeController {
     
     func handleRefreshHome() {
         checkIfLoggedIn()
+    }
+    
+    func handleRefreshData() {
+        setCurrentUser()
     }
 }
 
