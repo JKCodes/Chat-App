@@ -288,7 +288,10 @@ extension HomeController {
                 profileController.user = user
                 navigationController?.pushViewController(profileController, animated: true)
             case .help:
-                navigationController?.pushViewController(HelpController(), animated: true)
+                guard let user = user else { return }
+                let helpController = HelpController()
+                helpController.user = user
+                navigationController?.pushViewController(helpController, animated: true)
             case .notification:
                 navigationController?.pushViewController(NotificationController(), animated: true)
             case .settings:

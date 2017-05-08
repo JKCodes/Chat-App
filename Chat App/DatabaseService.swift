@@ -20,6 +20,7 @@ fileprivate let FIR_CHILD_MESSAGES = "messages"
 fileprivate let FIR_CHILD_USER_MESSAGES = "user-messages"
 fileprivate let FIR_CHILD_POSTS = "posts"
 fileprivate let FIR_CHILD_FOLLOWING = "following"
+fileprivate let FIR_CHILD_HELP = "help"
 
 enum DataTypes: String {
     case email
@@ -29,6 +30,7 @@ enum DataTypes: String {
     case post
     case userMessages
     case following
+    case help
 }
 
 
@@ -69,6 +71,10 @@ class DatabaseService {
     
     var followingRef: FIRDatabaseReference {
         return rootRef.child(FIR_CHILD_FOLLOWING)
+    }
+    
+    var helpRef: FIRDatabaseReference {
+        return rootRef.child(FIR_CHILD_HELP)
     }
     
     func isUnique(type: DataTypes, eventType: FIRDataEventType,  query: String, onComplete: @escaping (_ flag: Bool) -> Void) {
@@ -226,6 +232,7 @@ class DatabaseService {
         case .userMessages: ref = userMessagesRef
         case .post: ref = postsRef
         case .following: ref = followingRef
+        case .help: ref = helpRef
         }
         
         if fan {

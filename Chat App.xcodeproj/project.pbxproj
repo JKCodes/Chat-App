@@ -50,6 +50,7 @@
 		D8AE6ECA1EAABA0400820525 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EC91EAABA0400820525 /* User.swift */; };
 		D8AE6ECC1EAAD04200820525 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6ECB1EAAD04200820525 /* CustomImageView.swift */; };
 		D8B604DB1EAEB899002CEB50 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B604DA1EAEB899002CEB50 /* SearchController.swift */; };
+		D8F1F26F1EC0ADDF00300310 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F1F26E1EC0ADDF00300310 /* HelpView.swift */; };
 		D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4961EB4AA1200AF193D /* ProfileController.swift */; };
 		D8F6F4991EB4AA2600AF193D /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4981EB4AA2600AF193D /* HelpController.swift */; };
 		D8F6F49B1EB4AA4E00AF193D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */; };
@@ -104,6 +105,7 @@
 		D8AE6EC91EAABA0400820525 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D8AE6ECB1EAAD04200820525 /* CustomImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
 		D8B604DA1EAEB899002CEB50 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
+		D8F1F26E1EC0ADDF00300310 /* HelpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		D8F6F4961EB4AA1200AF193D /* ProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		D8F6F4981EB4AA2600AF193D /* HelpController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
 		D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
@@ -311,6 +313,7 @@
 			isa = PBXGroup;
 			children = (
 				D8F6F4981EB4AA2600AF193D /* HelpController.swift */,
+				D8F1F26E1EC0ADDF00300310 /* HelpView.swift */,
 			);
 			name = Help;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */,
 				D81D607B1E9D2C4F00151664 /* LoginController.swift in Sources */,
 				D8AA30C31EB1414500BF0587 /* Message.swift in Sources */,
+				D8F1F26F1EC0ADDF00300310 /* HelpView.swift in Sources */,
 				D8F6F4991EB4AA2600AF193D /* HelpController.swift in Sources */,
 				D805D0CB1EA8A7B70003B9BC /* HomeController.swift in Sources */,
 				D8962AEB1EBB676A0079CFE0 /* EditController.swift in Sources */,
