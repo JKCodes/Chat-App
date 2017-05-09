@@ -49,6 +49,8 @@
 		D8AE6EC81EAAB5EB00820525 /* MenuHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EC71EAAB5EB00820525 /* MenuHeader.swift */; };
 		D8AE6ECA1EAABA0400820525 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6EC91EAABA0400820525 /* User.swift */; };
 		D8AE6ECC1EAAD04200820525 /* CustomImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8AE6ECB1EAAD04200820525 /* CustomImageView.swift */; };
+		D8B4ED5E1EC111AF00537BA7 /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B4ED5D1EC111AF00537BA7 /* SettingsCell.swift */; };
+		D8B4ED601EC115A500537BA7 /* SettingsItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B4ED5F1EC115A500537BA7 /* SettingsItem.swift */; };
 		D8B604DB1EAEB899002CEB50 /* SearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8B604DA1EAEB899002CEB50 /* SearchController.swift */; };
 		D8F1F26F1EC0ADDF00300310 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F1F26E1EC0ADDF00300310 /* HelpView.swift */; };
 		D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4961EB4AA1200AF193D /* ProfileController.swift */; };
@@ -104,6 +106,8 @@
 		D8AE6EC71EAAB5EB00820525 /* MenuHeader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuHeader.swift; sourceTree = "<group>"; };
 		D8AE6EC91EAABA0400820525 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		D8AE6ECB1EAAD04200820525 /* CustomImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomImageView.swift; sourceTree = "<group>"; };
+		D8B4ED5D1EC111AF00537BA7 /* SettingsCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
+		D8B4ED5F1EC115A500537BA7 /* SettingsItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsItem.swift; sourceTree = "<group>"; };
 		D8B604DA1EAEB899002CEB50 /* SearchController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchController.swift; sourceTree = "<group>"; };
 		D8F1F26E1EC0ADDF00300310 /* HelpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		D8F6F4961EB4AA1200AF193D /* ProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 				D8AE6EC51EAA868B00820525 /* MenuItem.swift */,
 				D8AE6EC91EAABA0400820525 /* User.swift */,
 				D8AA30C21EB1414500BF0587 /* Message.swift */,
+				D8B4ED5F1EC115A500537BA7 /* SettingsItem.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -322,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				D8F6F49C1EB4AA5900AF193D /* SettingsController.swift */,
+				D8B4ED5D1EC111AF00537BA7 /* SettingsCell.swift */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -450,6 +456,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D8B4ED5E1EC111AF00537BA7 /* SettingsCell.swift in Sources */,
 				D8AE6EC21EAA843C00820525 /* MenuItemCell.swift in Sources */,
 				D805D0C71EA88F5B0003B9BC /* DatabaseService.swift in Sources */,
 				D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */,
@@ -462,6 +469,7 @@
 				D8A4A28B1E9D40DB00F54B68 /* UIColor + rgb.swift in Sources */,
 				D8F6F49B1EB4AA4E00AF193D /* NotificationController.swift in Sources */,
 				D8A4A2871E9D3F1000F54B68 /* BaseCell.swift in Sources */,
+				D8B4ED601EC115A500537BA7 /* SettingsItem.swift in Sources */,
 				D8AE6EB71EAA5BAE00820525 /* EmptyCell.swift in Sources */,
 				D8AE6ECA1EAABA0400820525 /* User.swift in Sources */,
 				D81D60791E9D2C4F00151664 /* AppDelegate.swift in Sources */,
