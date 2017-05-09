@@ -269,7 +269,7 @@ extension SignUpController {
             
             guard let profileImageUrl = metadata?.downloadURL()?.absoluteString else { return }
             
-            var data = ["firstName": firstName, "lastName": lastName, "username": username, "profileImageUrl": profileImageUrl, "email": email] as Dictionary<String, AnyObject>
+            var data = ["firstName": firstName, "lastName": lastName, "username": username, "profileImageUrl": profileImageUrl, "email": email, "exactMatch": 0, "hideDefault": 0, "noNotifications": 0] as Dictionary<String, AnyObject>
         
             DatabaseService.shared.saveData(type: .user, data: data, firstChild: uid, secondChild: nil, appendAutoId: false, onComplete: { (error, _) in
                 if let error = error {

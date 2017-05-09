@@ -296,6 +296,7 @@ extension HomeController {
                 navigationController?.pushViewController(NotificationController(), animated: true)
             case .settings:
                 let settingsController = SettingsController(collectionViewLayout: UICollectionViewFlowLayout())
+                settingsController.user = user
                 navigationController?.pushViewController(settingsController, animated: true)
             default: break
             }

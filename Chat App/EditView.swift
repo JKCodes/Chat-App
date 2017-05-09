@@ -18,7 +18,7 @@ class EditView: UIView {
     internal var profileImageChanged: Bool = false
     
     internal static let topSpacing: CGFloat = 80
-    fileprivate let profileImageLength: CGFloat =  150
+    fileprivate let profileImageLength: CGFloat =  120
     internal static let contentOffset: CGFloat = 50
     fileprivate let contentSpacing: CGFloat = 10
     fileprivate let stackViewHeight: CGFloat = 40 * 5 + 10 * 4

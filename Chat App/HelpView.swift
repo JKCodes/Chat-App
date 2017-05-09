@@ -18,7 +18,7 @@ class HelpView: UIView {
     internal static let topSpacing: CGFloat = 32
     fileprivate let defaultHeight: CGFloat = 30
     fileprivate let leftRightSpacing: CGFloat = 50
-    fileprivate let textViewHeight: CGFloat = 250
+    fileprivate let textViewHeight: CGFloat = 200
     
     internal static var sendHelpTopConstraint: NSLayoutConstraint?
     
@@ -37,7 +37,7 @@ class HelpView: UIView {
     let mainTitleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.avenirNextFont(size: 22, bold: true)
-        label.text = "Need help with something?"
+        label.text = "Need help?"
         return label
     }()
     

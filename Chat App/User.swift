@@ -15,6 +15,9 @@ class User: NSObject {
     var email: String
     var username: String
     var profileImageUrl: String
+    var exactMatch: Int
+    var hideDefault: Int
+    var noNotifications: Int
     
     init(uid: String, dictionary: [String: Any]) {
         self.uid = uid
@@ -23,5 +26,8 @@ class User: NSObject {
         self.email = dictionary["email"] as? String ?? ""
         self.username = dictionary["username"] as? String ?? ""
         self.profileImageUrl = dictionary["profileImageUrl"] as? String ?? ""
+        self.exactMatch = dictionary["exactMatch"] as? Int ?? 0
+        self.hideDefault = dictionary["hideDefault"] as? Int ?? 0
+        self.noNotifications = dictionary["noNotifications"] as? Int ?? 0
     }
 }

@@ -12,8 +12,8 @@ class MenuController: NSObject, UICollectionViewDelegate, UICollectionViewDelega
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
-    fileprivate let menuItemCellSize: CGFloat = 95
-    fileprivate let menuWidthRatio: CGFloat = 0.7
+    fileprivate let menuItemCellSize: CGFloat = 88
+    fileprivate let menuWidthRatio: CGFloat = 0.80
     fileprivate let cellSpacing: CGFloat = 20
     fileprivate let headerHeight: CGFloat = 130
     

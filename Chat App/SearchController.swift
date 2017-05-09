@@ -82,10 +82,14 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            filteredUsers = users
+            filteredUsers = removeHideDefaultUsers(users: users)
         } else {
             filteredUsers = users.filter { (user) -> Bool in
-                return (user.username.lowercased().contains(searchText.lowercased())) || (user.firstName.lowercased().contains(searchText.lowercased())) || (user.lastName.lowercased().contains(searchText.lowercased()))
+                if isExactUser(user: user) && searchText != user.username { return false }
+                
+                return (user.username.lowercased().contains(searchText.lowercased())) ||
+                    (user.firstName.lowercased().contains(searchText.lowercased())) ||
+                    (user.lastName.lowercased().contains(searchText.lowercased()))
             }
         }
         
@@ -101,14 +105,22 @@ extension SearchController {
     func fetchUsers() {
         
         DatabaseService.shared.fetchUsers { [weak self] (fetchedUsers) in
-            self?.users = fetchedUsers
-            self?.filteredUsers = fetchedUsers
+            guard let this = self else { return }
+            this.users = fetchedUsers
+            this.filteredUsers = this.removeHideDefaultUsers(users: fetchedUsers)
             DispatchQueue.main.async {
-                self?.collectionView?.reloadData()
+                this.collectionView?.reloadData()
             }
         }
     }
     
+    fileprivate func removeHideDefaultUsers(users: [User]) -> [User] {
+        return users.filter({ $0.hideDefault != 1 && !isExactUser(user: $0)})
+    }
+    
+    fileprivate func isExactUser(user: User) -> Bool {
+        return user.exactMatch == 1
+    }
     
     func addRemoveFriend(user: User) {
         

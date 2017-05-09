@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol SettingsCellDelegate: class {
+    func didEnableSetting(index: Int, onComplete: @escaping (Bool) -> Void)
+    func didDisableSetting(index: Int, onComplete: @escaping (Bool) -> Void)
+}
+
 class SettingsCell: BaseCollectionViewCell {
     
     fileprivate var enabled: Bool = false
@@ -18,11 +23,20 @@ class SettingsCell: BaseCollectionViewCell {
     fileprivate var circleViewLeftConstraint: NSLayoutConstraint!
     
     
-    var title: String? {
+    var index: Int!
+    
+    var setting: SettingsItem? {
         didSet {
-            nameLabel.text = title
+            nameLabel.text = setting?.name.rawValue
+            if setting?.enabled ?? false {
+                changeUI(for: true)
+            } else {
+                changeUI(for: false)
+            }
         }
     }
+    
+    weak var delegate: SettingsCellDelegate?
     
     fileprivate let nameLabel: UILabel = {
         let label = UILabel()
@@ -112,15 +126,35 @@ extension SettingsCell {
 // MARK: - Others
 extension SettingsCell {
     fileprivate func enableSetting() {
-        enabled = true
-        enableView.backgroundColor = .green
-        animateConstraint(to: 30)
+        changeUI(for: true)
+        
+        delegate?.didEnableSetting(index: index, onComplete: { [weak self] (success) in
+            if !success {
+                self?.disableSetting()
+            }
+        })
     }
     
     fileprivate func disableSetting() {
-        enabled = false
-        enableView.backgroundColor = .red
-        animateConstraint(to: 0)
+        changeUI(for: false)
+        
+        delegate?.didDisableSetting(index: index, onComplete: { [weak self] (success) in
+            if !success {
+                self?.enableSetting()
+            }
+        })
+    }
+    
+    fileprivate func changeUI(for flag: Bool) {
+        if flag {
+            enabled = true
+            enableView.backgroundColor = .green
+            animateConstraint(to: 30)
+        } else {
+            enabled = false
+            enableView.backgroundColor = .red
+            animateConstraint(to: 0)
+        }
     }
     
     fileprivate func animateConstraint(to value: CGFloat) {
