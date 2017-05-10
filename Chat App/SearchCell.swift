@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol SearchCellDelegate: class {
+    func addRemoveFriend(user: User)
+    func isFriend(user: User, onComplete: @escaping (Bool) -> Void)
+}
+
 class SearchCell: BaseCollectionViewCell {
     
     fileprivate let cellSpacing: CGFloat = 8
@@ -31,7 +36,7 @@ class SearchCell: BaseCollectionViewCell {
         }
     }
     
-    weak var delegate: SearchDelegate?
+    weak var delegate: SearchCellDelegate?
     
     let profileImageView: CustomImageView = {
         let iv = CustomImageView()
@@ -91,6 +96,7 @@ class SearchCell: BaseCollectionViewCell {
     }
 }
 
+// MARK: - Handlers and Others
 extension SearchCell {
     func handleAdd() {
         guard let user = user else { return }

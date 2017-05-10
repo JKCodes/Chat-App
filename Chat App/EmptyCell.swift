@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol EmptyCellDelegate: class {
+    func handleNewMessage()
+}
+
 class EmptyCell: UITableViewCell {
     
     fileprivate let backgroundCharacterTopOffset: CGFloat = 120
@@ -64,6 +68,7 @@ class EmptyCell: UITableViewCell {
     }
 }
 
+// MARK: - Setup and Handler
 extension EmptyCell {
     
     fileprivate func setupViews() {

@@ -8,7 +8,11 @@
 
 import UIKit
 
-class MenuController: NSObject, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
+protocol MenuControllerDelegate: class {
+    func showController(menuItem: MenuItem)
+}
+
+class MenuController: NSObject {
     
     fileprivate let cellId = "cellId"
     fileprivate let headerId = "headerId"
@@ -26,7 +30,7 @@ class MenuController: NSObject, UICollectionViewDelegate, UICollectionViewDelega
         }
     }
     
-    weak var delegate: MenuDelegate?
+    weak var delegate: MenuControllerDelegate?
     
     let blackView = UIView()
     
@@ -55,8 +59,10 @@ class MenuController: NSObject, UICollectionViewDelegate, UICollectionViewDelega
         collectionView.register(MenuItemCell.self, forCellWithReuseIdentifier: cellId)
         collectionView.register(MenuHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerId)
     }
-    
-    
+}
+
+// MARK: - CollectionView Related
+extension MenuController: UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return menuItems.count
     }
@@ -94,8 +100,30 @@ class MenuController: NSObject, UICollectionViewDelegate, UICollectionViewDelega
     }
 }
 
+// MARK: - Handlers
 extension MenuController {
+    func handleBlackViewTap() {
+        handleDismiss(menuItem: MenuItem(name: .cancel, image: #imageLiteral(resourceName: "logout")))
+    }
     
+    func handleDismiss(menuItem: MenuItem) {
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            guard let window = self.window else { return }
+            
+            self.blackView.alpha = 0
+            self.collectionView.frame = CGRect(x: -window.frame.width * self.menuWidthRatio, y: 0, width: self.collectionView.frame.width, height: self.collectionView.frame.height)
+        }) { [weak self] (completed ) in
+            if menuItem.name != .cancel {
+                self?.delegate?.showController(menuItem: menuItem)
+            }
+            
+            self?.collectionView.removeFromSuperview()
+            self?.blackView.removeFromSuperview()
+        }
+    }
+}
+
+extension MenuController {
     internal func showMenu() {
         guard let window = window else { return }
         
@@ -114,31 +142,9 @@ extension MenuController {
         blackView.frame = window.frame
         blackView.alpha = 0
         
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: { [weak self] in
-            guard let this = self else { return }
-            
-            this.blackView.alpha = 1
-            this.collectionView.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: {
+            self.blackView.alpha = 1
+            self.collectionView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         }, completion: nil)
-    }
-    
-    func handleBlackViewTap() {
-        handleDismiss(menuItem: MenuItem(name: .cancel, image: #imageLiteral(resourceName: "logout")))
-    }
-    
-    func handleDismiss(menuItem: MenuItem) {
-        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 1, options: .curveEaseOut, animations: { [weak self] in
-            guard let this = self, let window = this.window else { return }
-            
-            this.blackView.alpha = 0
-            this.collectionView.frame = CGRect(x: -window.frame.width * this.menuWidthRatio, y: 0, width: this.collectionView.frame.width, height: this.collectionView.frame.height)
-        }) { [weak self] (completed ) in
-            if menuItem.name != .cancel {
-                self?.delegate?.showController(menuItem: menuItem)
-            }
-
-            self?.collectionView.removeFromSuperview()
-            self?.blackView.removeFromSuperview()
-        }
     }
 }

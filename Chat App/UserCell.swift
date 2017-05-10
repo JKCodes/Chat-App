@@ -36,24 +36,7 @@ class UserCell: UITableViewCell {
                 
             }
             
-            if let timeStamp = message?.timestamp, let seconds = Double(timeStamp) {
-                let timestampeDate = Date(timeIntervalSince1970: seconds)
-                let elapsedTimeInSeconds = Date().timeIntervalSince(timestampeDate)
-                let secondsInADay: TimeInterval = 60 * 60 * 24
-                
-                let dateFormatter = DateFormatter()
-                
-                if elapsedTimeInSeconds > 7 * secondsInADay {
-                    dateFormatter.dateFormat = "MM/dd/yy"
-                } else if elapsedTimeInSeconds > secondsInADay {
-                    dateFormatter.dateFormat = "EEE"
-                } else {
-                    dateFormatter.dateFormat = "hh:mm:ss a"
-                }
-                
-                timeLabel.text = dateFormatter.string(from: timestampeDate)
-            }
-            
+            setupTimeStamp()
         }
     }
     
@@ -123,7 +106,29 @@ class UserCell: UITableViewCell {
     }
 }
 
+// Mark: - Setup
 extension UserCell {
+    
+    fileprivate func setupTimeStamp() {
+        if let timeStamp = message?.timestamp, let seconds = Double(timeStamp) {
+            let timestampeDate = Date(timeIntervalSince1970: seconds)
+            let elapsedTimeInSeconds = Date().timeIntervalSince(timestampeDate)
+            let secondsInADay: TimeInterval = 60 * 60 * 24
+            
+            let dateFormatter = DateFormatter()
+            
+            if elapsedTimeInSeconds > 7 * secondsInADay {
+                dateFormatter.dateFormat = "MM/dd/yy"
+            } else if elapsedTimeInSeconds > secondsInADay {
+                dateFormatter.dateFormat = "EEE"
+            } else {
+                dateFormatter.dateFormat = "hh:mm:ss a"
+            }
+            
+            timeLabel.text = dateFormatter.string(from: timestampeDate)
+        }
+    }
+    
     fileprivate func setupNameAndProfileImage() {
         
         if let id = message?.chatPartnerId() {

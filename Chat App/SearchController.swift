@@ -8,7 +8,7 @@
 
 import UIKit
 
-class SearchController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UISearchBarDelegate, SearchDelegate, Alerter {
+class SearchController: UICollectionViewController, Alerter {
     
     fileprivate let cellId = "cellId"
     fileprivate let cellHeight: CGFloat = 80
@@ -27,21 +27,8 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        collectionView?.backgroundColor = .white
-
-        navigationController?.navigationBar.addSubview(searchBar)
-
-        let navBar = navigationController?.navigationBar
-        
-        searchBar.delegate = self
-        searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, topConstant: 0, leftConstant: searchBarLeftSpacing, bottomConstant: 0, rightConstant: contentSpacing, widthConstant: 0, heightConstant: 0)
-        
-        collectionView?.alwaysBounceVertical = true
-        collectionView?.keyboardDismissMode = .onDrag
-        
-        collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: cellId)
-        
+        setupNavBar()
+        setupCollectionView()
         fetchUsers()
     }
     
@@ -56,10 +43,6 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         return cell
     }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: cellHeight)
-    }
-
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
     }
@@ -79,51 +62,30 @@ class SearchController: UICollectionViewController, UICollectionViewDelegateFlow
         searchBar.isHidden = true
         searchBar.resignFirstResponder()
     }
-    
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            filteredUsers = removeHideDefaultUsers(users: users)
-        } else {
-            filteredUsers = users.filter { (user) -> Bool in
-                if isExactUser(user: user) && searchText != user.username { return false }
-                
-                return (user.username.lowercased().contains(searchText.lowercased())) ||
-                    (user.firstName.lowercased().contains(searchText.lowercased())) ||
-                    (user.lastName.lowercased().contains(searchText.lowercased()))
-            }
-        }
-        
-        DispatchQueue.main.async { [weak self] in
-            self?.collectionView?.reloadData()
-        }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+extension SearchController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: view.frame.width, height: cellHeight)
     }
 }
 
-extension SearchController {
-    
-    
-    func fetchUsers() {
+// MARK: - Delegate for SearchCell
+extension SearchController: SearchCellDelegate {
+    func isFriend(user: User, onComplete: @escaping (Bool) -> Void) {
+        guard let uid = currentUserId else { return }
         
-        DatabaseService.shared.fetchUsers { [weak self] (fetchedUsers) in
-            guard let this = self else { return }
-            this.users = fetchedUsers
-            this.filteredUsers = this.removeHideDefaultUsers(users: fetchedUsers)
-            DispatchQueue.main.async {
-                this.collectionView?.reloadData()
+        DatabaseService.shared.retrieveOnce(type: .following, eventType: .value, firstChild: uid, secondChild: nil, propagate: nil, sortBy: nil) { (snapshot) in
+            if snapshot.hasChild(user.uid) {
+                onComplete(true)
+            } else {
+                onComplete(false)
             }
         }
     }
     
-    fileprivate func removeHideDefaultUsers(users: [User]) -> [User] {
-        return users.filter({ $0.hideDefault != 1 && !isExactUser(user: $0)})
-    }
-    
-    fileprivate func isExactUser(user: User) -> Bool {
-        return user.exactMatch == 1
-    }
-    
     func addRemoveFriend(user: User) {
-        
         isFriend(user: user, onComplete: { [weak self] (isFriend) in
             guard let this = self else { return }
             if isFriend {
@@ -144,6 +106,7 @@ extension SearchController {
         })
     }
     
+    // Delegate helper functions
     fileprivate func addFriend(user: User, onComplete: @escaping (Bool) -> Void) {
         guard let uid = currentUserId else { return }
         let values = [user.uid: 1] as [String: AnyObject]
@@ -170,17 +133,67 @@ extension SearchController {
         }
         
     }
-    
-    func isFriend(user: User, onComplete: @escaping (Bool) -> Void) {
-        guard let uid = currentUserId else { return }
+}
+
+// MARK: - Delegate for UISearchBar
+extension SearchController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            filteredUsers = removeHideDefaultUsers(users: users)
+        } else {
+            filteredUsers = users.filter { (user) -> Bool in
+                if isExactUser(user: user) && searchText != user.username { return false }
+                
+                return (user.username.lowercased().contains(searchText.lowercased())) ||
+                    (user.firstName.lowercased().contains(searchText.lowercased())) ||
+                    (user.lastName.lowercased().contains(searchText.lowercased()))
+            }
+        }
         
-        DatabaseService.shared.retrieveOnce(type: .following, eventType: .value, firstChild: uid, secondChild: nil, propagate: nil, sortBy: nil) { (snapshot) in
-            if snapshot.hasChild(user.uid) {
-                onComplete(true)
-            } else {
-                onComplete(false)
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView?.reloadData()
+        }
+    }
+}
+
+// MARK: - Setup
+extension SearchController {
+    fileprivate func setupNavBar() {
+        navigationController?.navigationBar.addSubview(searchBar)
+        
+        let navBar = navigationController?.navigationBar
+        
+        searchBar.delegate = self
+        searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, topConstant: 0, leftConstant: searchBarLeftSpacing, bottomConstant: 0, rightConstant: contentSpacing, widthConstant: 0, heightConstant: 0)
+    }
+    
+    fileprivate func setupCollectionView() {
+        collectionView?.backgroundColor = .white
+        collectionView?.alwaysBounceVertical = true
+        collectionView?.keyboardDismissMode = .onDrag
+        collectionView?.register(SearchCell.self, forCellWithReuseIdentifier: cellId)
+    }
+}
+
+// MARK: - Others
+extension SearchController {
+    fileprivate func fetchUsers() {
+        
+        DatabaseService.shared.fetchUsers { [weak self] (fetchedUsers) in
+            guard let this = self else { return }
+            this.users = fetchedUsers
+            this.filteredUsers = this.removeHideDefaultUsers(users: fetchedUsers)
+            DispatchQueue.main.async {
+                this.collectionView?.reloadData()
             }
         }
     }
     
+    fileprivate func removeHideDefaultUsers(users: [User]) -> [User] {
+        return users.filter({ $0.hideDefault != 1 && !isExactUser(user: $0)})
+    }
+    
+    fileprivate func isExactUser(user: User) -> Bool {
+        return user.exactMatch == 1
+    }
 }

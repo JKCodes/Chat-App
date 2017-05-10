@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol ChatInputContainerViewDelegate: class {
+    func handleSend()
+    func handleUploadTap()
+}
+
 class ChatInputContainerView: UIView, UITextFieldDelegate {
     
     fileprivate let buttonWidth: CGFloat = 80

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDelegate, NewMessagesDelegate {
+class HomeController: UITableViewController, Alerter {
     
     fileprivate let userCellId = "userCellId"
     fileprivate let emptyCellId = "emptyCellId"
@@ -27,11 +27,9 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
         return iv
     }()
     
-    fileprivate lazy var menuController: MenuController = { [weak self] in
-        guard let this = self else { return MenuController() }
-        
+    fileprivate lazy var menuController: MenuController = { [unowned self] in
         let controller = MenuController()
-        controller.delegate = this
+        controller.delegate = self
         return controller
     }()
     
@@ -42,21 +40,8 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
         NotificationCenter.default.addObserver(self, selector: #selector(handleRefreshData), name: EditController.refreshDataNotificationName, object: nil)
         
         checkIfLoggedIn()
-        
-        navigationItem.title = "MSG"
-        
-        let searchBarButton = UIBarButtonItem(image: #imageLiteral(resourceName: "searchbutton"), style: .plain, target: self, action: #selector(handleSearch))
-        let newMessageBarButton = UIBarButtonItem(image: #imageLiteral(resourceName: "newmessage"), style: .plain, target: self, action: #selector(handleNewMessage))
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menubutton"), style: .plain, target: self, action: #selector(handleMenu))
-        navigationItem.rightBarButtonItems = [newMessageBarButton, searchBarButton]
-        
-        tableView.backgroundView = backgroundImageView
-        
-        tableView.register(UserCell.self, forCellReuseIdentifier: userCellId)
-        tableView.register(EmptyCell.self, forCellReuseIdentifier: emptyCellId)
-        
-        tableView.allowsMultipleSelectionDuringEditing = true
+        setupNavBar()
+        setupTableView()
     }
     
     deinit {
@@ -72,7 +57,10 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
             setCurrentUser()
         }
     }
-    
+}
+
+// MARK: - TableView related
+extension HomeController {
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
@@ -119,7 +107,7 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
             return cell
         }
     }
-
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if messages.count == 0 {
             let navbarHeight = navigationController?.navigationBar.frame.height ?? 0
@@ -140,11 +128,78 @@ class HomeController: UITableViewController, Alerter, MenuDelegate, EmptyCellDel
             self?.showChatController(user: user)
         }
     }
-    
+}
+
+// MARK: - Delegate for NewMessageController
+extension HomeController: NewMessagesControllerDelegate {
+    func showChatController(user: User) {
+        let layout = UICollectionViewFlowLayout()
+        let chatLogController = ChatLogController(collectionViewLayout: layout)
+        chatLogController.user = user
+        navigationController?.pushViewController(chatLogController, animated: true)
+    }
+}
+
+// MARK: - Delegate for MenuController
+extension HomeController: MenuControllerDelegate {
+    func showController(menuItem: MenuItem) {
+        if menuItem.name == .logout {
+            handleLogout()
+        } else {
+            switch menuItem.name {
+            case .profile:
+                guard let user = user else { return }
+                let profileController = ProfileController()
+                profileController.user = user
+                navigationController?.pushViewController(profileController, animated: true)
+            case .help:
+                guard let user = user else { return }
+                let helpController = HelpController()
+                helpController.user = user
+                navigationController?.pushViewController(helpController, animated: true)
+            case .notification:
+                navigationController?.pushViewController(NotificationController(), animated: true)
+            case .settings:
+                let settingsController = SettingsController(collectionViewLayout: UICollectionViewFlowLayout())
+                settingsController.user = user
+                navigationController?.pushViewController(settingsController, animated: true)
+            default: break
+            }
+        }
+    }
+}
+
+// MARK: - Delegate for EmptyCell
+extension HomeController: EmptyCellDelegate {
+    func handleNewMessage() {
+        let newMessageController = NewMessageController()
+        newMessageController.delegate = self
+        navigationController?.pushViewController(newMessageController, animated: true)
+    }
 }
 
 // MARK: - Setup
 extension HomeController {
+    
+    fileprivate func setupTableView() {
+        tableView.backgroundView = backgroundImageView
+        
+        tableView.register(UserCell.self, forCellReuseIdentifier: userCellId)
+        tableView.register(EmptyCell.self, forCellReuseIdentifier: emptyCellId)
+        
+        tableView.allowsMultipleSelectionDuringEditing = true
+    }
+    
+    fileprivate func setupNavBar() {
+        navigationItem.title = "MSG"
+        
+        let searchBarButton = UIBarButtonItem(image: #imageLiteral(resourceName: "searchbutton"), style: .plain, target: self, action: #selector(handleSearch))
+        let newMessageBarButton = UIBarButtonItem(image: #imageLiteral(resourceName: "newmessage"), style: .plain, target: self, action: #selector(handleNewMessage))
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "menubutton"), style: .plain, target: self, action: #selector(handleMenu))
+        navigationItem.rightBarButtonItems = [newMessageBarButton, searchBarButton]
+    }
+    
     fileprivate func setCurrentUser() {
         guard let currentUserId = AuthenticationService.shared.currentId() else { return }
         
@@ -177,12 +232,6 @@ extension HomeController {
         navigationController?.pushViewController(searchController, animated: true)
     }
     
-    func handleNewMessage() {
-        let newMessageController = NewMessageController()
-        newMessageController.delegate = self
-        navigationController?.pushViewController(newMessageController, animated: true)
-    }
-    
     func handleLogout() {
         AuthenticationService.shared.signOut { [weak self] (error, _) in
             guard let this = self else { return }
@@ -213,7 +262,7 @@ extension HomeController {
 // MARK: - Others
 extension HomeController {
     
-    func observeUserMessages() {
+    fileprivate func observeUserMessages() {
         guard let uid = AuthenticationService.shared.currentId() else { return }
         
         DatabaseService.shared.retrieve(type: .userMessages, eventType: .childAdded, firstChild: uid, secondChild: nil, propagate: true, sortBy: nil) { [weak self] (snapshot) in
@@ -273,40 +322,5 @@ extension HomeController {
     fileprivate func attemptReloadOfTable() {
         timer?.invalidate()
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(self.handleReloadTable), userInfo: nil, repeats: false)
-    }
-    
-    func showController(menuItem: MenuItem) {
-        
-        if menuItem.name == .logout {
-            handleLogout()
-        } else {
-            
-            switch menuItem.name {
-            case .profile:
-                guard let user = user else { return }
-                let profileController = ProfileController()
-                profileController.user = user
-                navigationController?.pushViewController(profileController, animated: true)
-            case .help:
-                guard let user = user else { return }
-                let helpController = HelpController()
-                helpController.user = user
-                navigationController?.pushViewController(helpController, animated: true)
-            case .notification:
-                navigationController?.pushViewController(NotificationController(), animated: true)
-            case .settings:
-                let settingsController = SettingsController(collectionViewLayout: UICollectionViewFlowLayout())
-                settingsController.user = user
-                navigationController?.pushViewController(settingsController, animated: true)
-            default: break
-            }
-        }
-    }
-    
-    func showChatController(user: User) {
-        let layout = UICollectionViewFlowLayout()
-        let chatLogController = ChatLogController(collectionViewLayout: layout)
-        chatLogController.user = user
-        navigationController?.pushViewController(chatLogController, animated: true)
     }
 }

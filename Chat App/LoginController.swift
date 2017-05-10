@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoginController: UIViewController, UITextFieldDelegate, Alerter {
+class LoginController: UIViewController, Alerter {
 
     fileprivate let loginView = LoginView()
     
@@ -53,7 +53,7 @@ class LoginController: UIViewController, UITextFieldDelegate, Alerter {
 }
 
 // MARK: - TextField Delegate
-extension LoginController {
+extension LoginController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         guard let email = loginView.emailField.text, let password = loginView.passwordField.text else { return false }
         handleLogin(email: email, password: password)

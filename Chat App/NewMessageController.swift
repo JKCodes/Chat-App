@@ -8,7 +8,11 @@
 
 import UIKit
 
-class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCellDelegate, Alerter {
+protocol NewMessagesControllerDelegate: class {
+    func showChatController(user: User)
+}
+
+class NewMessageController: UITableViewController, Alerter {
     
     
     fileprivate let cellId = "cellId"
@@ -22,7 +26,7 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     fileprivate var filteredUsers = [User]()
     fileprivate var users = [User]()
     
-    weak var delegate: NewMessagesDelegate?
+    weak var delegate: NewMessagesControllerDelegate?
     
     
     override func viewDidLoad() {
@@ -30,20 +34,9 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
         
         NotificationCenter.default.addObserver(self, selector: #selector(handleUpdateUsers), name: SearchController.updateUsersNotificationName, object: nil)
         
-        navigationController?.navigationBar.addSubview(searchBar)
-        
-        let navBar = navigationController?.navigationBar
-        
-        searchBar.delegate = self
-        searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, topConstant: 0, leftConstant: searchBarLeftSpacing, bottomConstant: 0, rightConstant: contentSpacing, widthConstant: 0, heightConstant: 0)
-    
+        setupNavBar()
+        setupTableView()
         fetchUsers()
-        
-        tableView.alwaysBounceVertical = true
-        tableView.keyboardDismissMode = .onDrag
-        
-        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
-        
     }
     
     deinit {
@@ -68,9 +61,7 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = users[indexPath.row]
-        
         delegate?.showChatController(user: user)
-        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -89,7 +80,10 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
         searchBar.isHidden = true
         searchBar.resignFirstResponder()
     }
-    
+}
+
+// MARK: - Delegate for UISearchBar
+extension NewMessageController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
             filteredUsers = users
@@ -98,20 +92,40 @@ class NewMessageController: UITableViewController, UISearchBarDelegate, SearchCe
                 return (user.username.lowercased().contains(searchText.lowercased())) || (user.firstName.lowercased().contains(searchText.lowercased())) || (user.lastName.lowercased().contains(searchText.lowercased()))
             }
         }
-
+        
         DispatchQueue.main.async { [weak self] in
             self?.tableView?.reloadData()
         }
     }
-    
 }
 
+// MARK: - Setups
 extension NewMessageController {
+    fileprivate func setupNavBar() {
+        navigationController?.navigationBar.addSubview(searchBar)
+        
+        let navBar = navigationController?.navigationBar
+        
+        searchBar.delegate = self
+        searchBar.anchor(top: navBar?.topAnchor, left: navBar?.leftAnchor, bottom: navBar?.bottomAnchor, right: navBar?.rightAnchor, topConstant: 0, leftConstant: searchBarLeftSpacing, bottomConstant: 0, rightConstant: contentSpacing, widthConstant: 0, heightConstant: 0)
+    }
     
+    fileprivate func setupTableView() {
+        tableView.alwaysBounceVertical = true
+        tableView.keyboardDismissMode = .onDrag
+        
+        tableView.register(UserCell.self, forCellReuseIdentifier: cellId)
+    }
+}
+
+// MARK: - Handlers
+extension NewMessageController {
     func handleUpdateUsers() {
         tableView?.reloadData()
     }
-    
+}
+
+extension NewMessageController {
     func fetchUsers() {
         DatabaseService.shared.fetchFollowingUsers { [weak self] (fetchedUsers) in
             self?.users = fetchedUsers

@@ -31,7 +31,7 @@ class HelpController: UIViewController, Alerter {
 // MARK: - Setup
 extension HelpController {
     
-    func setupViews() {
+    fileprivate func setupViews() {
         
         view.addSubview(helpView)
         helpView.anchor(top: topLayoutGuide.bottomAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: 0)
