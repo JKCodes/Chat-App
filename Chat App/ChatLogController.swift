@@ -21,8 +21,8 @@ class ChatLogController: UICollectionViewController, Alerter {
 
     var user: User? {
         didSet {
-            guard let firstName = user?.firstName, let lastName = user?.lastName else { return }
-            navigationItem.title = "\(firstName) \(lastName)"
+            guard let firstName = user?.firstName, let lastName = user?.lastName, let username = user?.username else { return }
+            navigationItem.title = "\(firstName) \(lastName) (@\(username))"
             
             observeMessages()
         }

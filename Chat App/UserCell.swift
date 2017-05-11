@@ -14,7 +14,7 @@ class UserCell: UITableViewCell {
     fileprivate let contentOffset: CGFloat = 8
     fileprivate let textFieldLeftConstant: CGFloat = 82
     fileprivate let messageButtonLength: CGFloat = 30
-    fileprivate let timeLabelWidth: CGFloat = 100
+    fileprivate let timeLabelHeight: CGFloat = 23
     fileprivate let timeLabelRightSpacing: CGFloat = 20
     
     var message: Message? {
@@ -62,6 +62,7 @@ class UserCell: UITableViewCell {
     let timeLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 13)
+        label.backgroundColor = .white
         label.textColor = .darkGray
         label.textAlignment = .right
         return label
@@ -80,11 +81,11 @@ class UserCell: UITableViewCell {
         addSubview(messageButton)
         addSubview(timeLabel)
         
-        profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, topConstant: 0, leftConstant: contentOffset * 2, bottomConstant: 0, rightConstant: 0, widthConstant: profileImageLength, heightConstant: profileImageLength)
+        profileImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, topConstant: 0, leftConstant: contentOffset * 2, bottomConstant: 0, rightConstant: 9, widthConstant: profileImageLength, heightConstant: profileImageLength)
         profileImageView.anchorCenterYToSuperview()
         messageButton.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: contentOffset * 2.5, widthConstant: messageButtonLength, heightConstant: messageButtonLength)
         messageButton.anchorCenterYToSuperview()
-        timeLabel.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: contentOffset * 2, leftConstant: 0, bottomConstant: 0, rightConstant: timeLabelRightSpacing, widthConstant: timeLabelWidth, heightConstant: 0)
+        timeLabel.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, topConstant: contentOffset * 2, leftConstant: 0, bottomConstant: 0, rightConstant: timeLabelRightSpacing, widthConstant: 0, heightConstant: timeLabelHeight)
         
         setupCell()
 
@@ -125,7 +126,7 @@ extension UserCell {
                 dateFormatter.dateFormat = "hh:mm:ss a"
             }
             
-            timeLabel.text = dateFormatter.string(from: timestampeDate)
+            timeLabel.text = " " + dateFormatter.string(from: timestampeDate)
         }
     }
     

@@ -100,7 +100,7 @@ extension HomeController {
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: userCellId, for: indexPath) as! UserCell
-            cell.selectionStyle = .default
+            cell.selectionStyle = .none
             
             let message = messages[indexPath.row]
             cell.message = message
@@ -184,7 +184,6 @@ extension HomeController {
         
         tableView.register(UserCell.self, forCellReuseIdentifier: userCellId)
         tableView.register(EmptyCell.self, forCellReuseIdentifier: emptyCellId)
-        
         tableView.allowsMultipleSelectionDuringEditing = true
     }
     

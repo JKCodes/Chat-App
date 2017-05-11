@@ -51,7 +51,6 @@
 		D8F1F26F1EC0ADDF00300310 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F1F26E1EC0ADDF00300310 /* HelpView.swift */; };
 		D8F6F4971EB4AA1200AF193D /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4961EB4AA1200AF193D /* ProfileController.swift */; };
 		D8F6F4991EB4AA2600AF193D /* HelpController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F4981EB4AA2600AF193D /* HelpController.swift */; };
-		D8F6F49B1EB4AA4E00AF193D /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */; };
 		D8F6F49D1EB4AA5900AF193D /* SettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8F6F49C1EB4AA5900AF193D /* SettingsController.swift */; };
 /* End PBXBuildFile section */
 
@@ -106,7 +105,6 @@
 		D8F1F26E1EC0ADDF00300310 /* HelpView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
 		D8F6F4961EB4AA1200AF193D /* ProfileController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
 		D8F6F4981EB4AA2600AF193D /* HelpController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpController.swift; sourceTree = "<group>"; };
-		D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		D8F6F49C1EB4AA5900AF193D /* SettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,7 +256,6 @@
 			children = (
 				D8F6F4921EB4A98700AF193D /* Profile */,
 				D8F6F4941EB4A99C00AF193D /* Help */,
-				D8F6F4931EB4A99300AF193D /* Notification */,
 				D8F6F4951EB4A9A400AF193D /* Settings */,
 				D8AE6EBC1EAA771C00820525 /* MenuController.swift */,
 				D8AE6EC11EAA843C00820525 /* MenuItemCell.swift */,
@@ -296,14 +293,6 @@
 				D8962AE51EBB4AC00079CFE0 /* ProfileView.swift */,
 			);
 			name = Profile;
-			sourceTree = "<group>";
-		};
-		D8F6F4931EB4A99300AF193D /* Notification */ = {
-			isa = PBXGroup;
-			children = (
-				D8F6F49A1EB4AA4E00AF193D /* NotificationController.swift */,
-			);
-			name = Notification;
 			sourceTree = "<group>";
 		};
 		D8F6F4941EB4A99C00AF193D /* Help */ = {
@@ -465,7 +454,6 @@
 				D8962AEB1EBB676A0079CFE0 /* EditController.swift in Sources */,
 				D826A7081EC3449500250536 /* SignUpView.swift in Sources */,
 				D8A4A28B1E9D40DB00F54B68 /* UIColor + rgb.swift in Sources */,
-				D8F6F49B1EB4AA4E00AF193D /* NotificationController.swift in Sources */,
 				D821916C1EC237F00057249F /* enums.swift in Sources */,
 				D8A4A2871E9D3F1000F54B68 /* BaseCell.swift in Sources */,
 				D8B4ED601EC115A500537BA7 /* SettingsItem.swift in Sources */,
