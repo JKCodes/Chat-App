@@ -10,7 +10,6 @@ import UIKit
 
 protocol ChatInputContainerViewDelegate: class {
     func handleSend()
-    func handleUploadTap()
 }
 
 class ChatInputContainerView: UIView, UITextFieldDelegate {
@@ -25,7 +24,6 @@ class ChatInputContainerView: UIView, UITextFieldDelegate {
     weak var delegate: ChatInputContainerViewDelegate? {
         didSet {
             sendButton.addTarget(delegate, action: #selector(ChatLogController.handleSend), for: .touchUpInside)
-            uploadImageView.addGestureRecognizer(UITapGestureRecognizer(target: delegate, action: #selector(ChatLogController.handleUploadTap)))
         }
     }
     
@@ -50,13 +48,6 @@ class ChatInputContainerView: UIView, UITextFieldDelegate {
         return sv
     }()
     
-    let uploadImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.image = #imageLiteral(resourceName: "attachment")
-        iv.isUserInteractionEnabled = true
-        return iv
-    }()
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -65,16 +56,12 @@ class ChatInputContainerView: UIView, UITextFieldDelegate {
         addSubview(sendButton)
         addSubview(inputTextField)
         addSubview(separatorView)
-        addSubview(uploadImageView)
         
         sendButton.anchor(top: nil, left: nil, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: buttonWidth, heightConstant: buttonHeight)
         sendButton.anchorCenterYToSuperview()
-        inputTextField.anchor(top: nil, left: uploadImageView.rightAnchor, bottom: nil, right: sendButton.leftAnchor, topConstant: 0, leftConstant: contentOffset, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: inputTextFieldHeight)
+        inputTextField.anchor(top: nil, left: leftAnchor, bottom: nil, right: sendButton.leftAnchor, topConstant: 0, leftConstant: contentOffset, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: inputTextFieldHeight)
         inputTextField.anchorCenterYToSuperview()
         separatorView.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: 0, heightConstant: separatorHeight)
-        uploadImageView.anchor(top: nil, left: leftAnchor, bottom: nil, right: nil, topConstant: 0, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: uploadImageLength, heightConstant: uploadImageLength)
-        uploadImageView.anchorCenterYToSuperview()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {

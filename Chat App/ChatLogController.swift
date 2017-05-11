@@ -116,10 +116,6 @@ extension ChatLogController: ChatInputContainerViewDelegate {
         
         sendMessage(properties: properties)
     }
-    
-    func handleUploadTap() {
-        present(alertVC(title: "Notice", message: "Feature coming soon!"), animated: true, completion: nil)
-    }
 }
 
 // MARK: - Setup

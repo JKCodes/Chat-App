@@ -64,12 +64,6 @@ class NewMessageController: UITableViewController, Alerter {
         delegate?.showChatController(user: user)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        if users.isEmpty {
-            present(alertVC(title: "Notice", message: "It looks like you haven't added any friends to chat with.  Why don't you add one or two friends and try again?"), animated: true, completion: nil)
-        }
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         searchBar.isHidden = false

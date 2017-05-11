@@ -73,7 +73,6 @@ extension SettingsController: SettingsCellDelegate {
         switch index {
         case 0: data[UserDefaultsItem.exactMatch.rawValue] = (flag ? 1 : 0) as AnyObject
         case 1: data[UserDefaultsItem.hideDefault.rawValue] = (flag ? 1 : 0) as AnyObject
-        case 2: data[UserDefaultsItem.noNotifications.rawValue] = (flag ? 1 : 0) as AnyObject
         default: return
         }
         
@@ -96,6 +95,6 @@ extension SettingsController {
     fileprivate func setupData() {
         settings.append(SettingsItem(name: .accountPrivacy, enabled: user?.exactMatch == 1 ? true : false))
         settings.append(SettingsItem(name: .hideFromDefaultSearch, enabled: user?.hideDefault == 1 ? true : false))
-        settings.append(SettingsItem(name: .pushNotifications, enabled: user?.noNotifications == 1 ? true : false))
+        settings.append(SettingsItem(name: .moreUpdates, enabled: true))
     }
 }

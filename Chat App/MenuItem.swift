@@ -11,7 +11,6 @@ import UIKit
 enum MenuItemName: String {
     case profile = "PROFILE"
     case help = "HELP"
-    case notification = "NOTIFICATIONS"
     case settings = "SETTINGS"
     case logout = "LOGOUT"
     case cancel = "CANCEL"

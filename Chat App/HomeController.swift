@@ -157,8 +157,6 @@ extension HomeController: MenuControllerDelegate {
                 let helpController = HelpController()
                 helpController.user = user
                 navigationController?.pushViewController(helpController, animated: true)
-            case .notification:
-                navigationController?.pushViewController(NotificationController(), animated: true)
             case .settings:
                 let settingsController = SettingsController(collectionViewLayout: UICollectionViewFlowLayout())
                 settingsController.user = user

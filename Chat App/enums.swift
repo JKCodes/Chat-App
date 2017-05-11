@@ -11,5 +11,5 @@ import Foundation
 enum UserDefaultsItem: String {
     case exactMatch
     case hideDefault
-    case noNotifications
+    case moreUpdates
 }

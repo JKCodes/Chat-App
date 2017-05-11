@@ -38,7 +38,6 @@ class MenuController: NSObject {
         return [
             MenuItem(name: .profile, image: #imageLiteral(resourceName: "profile")),
             MenuItem(name: .help, image: #imageLiteral(resourceName: "help")),
-            MenuItem(name: .notification, image: #imageLiteral(resourceName: "notification")),
             MenuItem(name: .settings, image: #imageLiteral(resourceName: "settings")),
             MenuItem(name: .logout, image: #imageLiteral(resourceName: "logout"))
         ]

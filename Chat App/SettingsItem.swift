@@ -11,7 +11,7 @@ import UIKit
 enum SettingsName: String {
     case accountPrivacy = "Make me searchable by those who know my exact username only"
     case hideFromDefaultSearch = "Exclude me from search when search bar is empty"
-    case pushNotifications = "Disable push notifications"
+    case moreUpdates = "More settings coming soon in future updates!"
 }
 
 class SettingsItem: NSObject {
