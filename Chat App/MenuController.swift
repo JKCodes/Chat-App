@@ -101,7 +101,7 @@ extension MenuController: UICollectionViewDelegate, UICollectionViewDelegateFlow
 
 // MARK: - Handlers
 extension MenuController {
-    func handleBlackViewTap() {
+    @objc func handleBlackViewTap() {
         handleDismiss(menuItem: MenuItem(name: .cancel, image: #imageLiteral(resourceName: "logout")))
     }
     

@@ -169,7 +169,7 @@ extension HomeController: MenuControllerDelegate {
 
 // MARK: - Delegate for EmptyCell
 extension HomeController: EmptyCellDelegate {
-    func handleNewMessage() {
+    @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
         newMessageController.delegate = self
         navigationController?.pushViewController(newMessageController, animated: true)
@@ -211,7 +211,7 @@ extension HomeController {
 // MARK: - Handlers
 extension HomeController {
     
-    func handleReloadTable() {
+    @objc func handleReloadTable() {
         messages = Array(messagesDictionary.values)
         messages.sort { (message1, message2) -> Bool in
             guard let m1 = message1.timestamp, let m2 = message2.timestamp, let time1 = Double(m1), let time2 = Double(m2) else { return true }
@@ -224,12 +224,12 @@ extension HomeController {
         }
     }
     
-    func handleSearch() {
+    @objc func handleSearch() {
         let searchController = SearchController(collectionViewLayout: UICollectionViewFlowLayout())
         navigationController?.pushViewController(searchController, animated: true)
     }
     
-    func handleLogout() {
+    @objc func handleLogout() {
         AuthenticationService.shared.signOut { [weak self] (error, _) in
             guard let this = self else { return }
             if let error = error {
@@ -243,15 +243,15 @@ extension HomeController {
         }
     }
     
-    func handleMenu() {
+    @objc func handleMenu() {
         menuController.showMenu()
     }
     
-    func handleRefreshHome() {
+    @objc func handleRefreshHome() {
         checkIfLoggedIn()
     }
     
-    func handleRefreshData() {
+    @objc func handleRefreshData() {
         setCurrentUser()
     }
 }

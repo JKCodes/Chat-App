@@ -152,7 +152,7 @@ extension EditController: UIImagePickerControllerDelegate, UINavigationControlle
 
 // MARK: - Handlers
 extension EditController {
-    func handleCancelLogin() {
+    @objc func handleCancelLogin() {
         cancelled = true
         navigationController?.popViewController(animated: true)
     }

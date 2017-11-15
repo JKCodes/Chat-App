@@ -114,7 +114,7 @@ extension NewMessageController {
 
 // MARK: - Handlers
 extension NewMessageController {
-    func handleUpdateUsers() {
+    @objc func handleUpdateUsers() {
         tableView?.reloadData()
     }
 }

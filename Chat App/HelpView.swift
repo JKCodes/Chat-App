@@ -104,7 +104,7 @@ extension HelpView {
 
 // MARK: - Handlers
 extension HelpView {
-    func handleSend() {
+    @objc func handleSend() {
         guard let uid = AuthenticationService.shared.currentId(),
             let email = emailField.text,
             let title = titleField.text,

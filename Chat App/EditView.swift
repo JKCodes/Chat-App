@@ -136,11 +136,11 @@ extension EditView {
 
 // MARK: - Handlers
 extension EditView {
-    func handleEditProfileImage() {
+    @objc func handleEditProfileImage() {
         delegate?.handleEditProfileImage()
     }
     
-    func handleSaveUserInfo() {
+    @objc func handleSaveUserInfo() {
         guard let firstName = firstnameField.text,
             let lastName = lastnameField.text,
             let username = usernameField.text?.trimmingCharacters(in: .whitespaces),

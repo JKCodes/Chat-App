@@ -33,8 +33,8 @@ class EmptyCell: UITableViewCell {
         label.numberOfLines = 0
         label.textAlignment = .center
         
-        let attributedText = NSMutableAttributedString(string: "Nothing here yet! \n", attributes: [NSFontAttributeName: UIFont.avenirNextFont(size: 22, bold: true), NSForegroundColorAttributeName: UIColor.darkGray])
-        attributedText.append(NSAttributedString(string: "Here is what to do now.", attributes: [NSFontAttributeName: UIFont.avenirNextFont(size: 14, bold: false), NSForegroundColorAttributeName: UIColor.lightGray]))
+        let attributedText = NSMutableAttributedString(string: "Nothing here yet! \n", attributes: [NSAttributedStringKey.font: UIFont.avenirNextFont(size: 22, bold: true), NSAttributedStringKey.foregroundColor: UIColor.darkGray])
+        attributedText.append(NSAttributedString(string: "Here is what to do now.", attributes: [NSAttributedStringKey.font: UIFont.avenirNextFont(size: 14, bold: false), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
         
         label.attributedText = attributedText
         return label
@@ -46,7 +46,7 @@ class EmptyCell: UITableViewCell {
         let button = UIButton(type: .system)
         button.layer.borderWidth = 1
         button.layer.borderColor = button.tintColor.cgColor
-        button.layer.cornerRadius = sendButtonRadius
+        button.layer.cornerRadius = EmptyCell.sendButtonRadius
         button.setImage(#imageLiteral(resourceName: "letter"), for: .normal)
         button.titleLabel?.font = UIFont.avenirNextFont(size: 14, bold: true)
         button.setTitle("  Send a message", for: .normal)
@@ -86,7 +86,7 @@ extension EmptyCell {
         sendMessageButton.anchor(top: notificationLabel.bottomAnchor, left: nil, bottom: nil, right: nil, topConstant: contentSpacing, leftConstant: 0, bottomConstant: 0, rightConstant: 0, widthConstant: sendButtonWidth, heightConstant: sendButtonHeight)
     }
     
-    func handleSendMessage() {
+    @objc func handleSendMessage() {
         delegate?.handleNewMessage()
     }
 }

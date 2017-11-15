@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
     
-    func tokenRefreshCallBack() {
+    @objc func tokenRefreshCallBack() {
         guard let uid = AuthenticationService.shared.currentId(), let refreshedToken = FIRInstanceID.instanceID().token() else { return }
         
         DatabaseService.shared.saveData(type: .user, data: [refreshedToken: 1 as AnyObject], firstChild: uid, secondChild: "notificationTokens", appendAutoId: false) { [weak self] (error, _) in

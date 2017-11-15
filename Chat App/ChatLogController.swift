@@ -101,7 +101,7 @@ extension ChatLogController: UICollectionViewDelegateFlowLayout {
     fileprivate func estimateFrame(text: String) -> CGRect {
         let size = CGSize(width: ChatMessageCell.cellWidth, height: 1000)
         let options = NSStringDrawingOptions.usesFontLeading.union(.usesLineFragmentOrigin)
-        let attributes = [NSFontAttributeName: UIFont.avenirNextFont(size: ChatMessageCell.textViewFontSize, bold: false)]
+        let attributes = [NSAttributedStringKey.font: UIFont.avenirNextFont(size: ChatMessageCell.textViewFontSize, bold: false)]
         
         return NSString(string: text).boundingRect(with: size, options: options, attributes: attributes, context: nil)
     }
@@ -156,7 +156,7 @@ extension ChatLogController {
 // MARK: - Handlers
 extension ChatLogController {
     
-    func handleKeyboardDidShow() {
+    @objc func handleKeyboardDidShow() {
         if messages.count > 0 {
             let indexPath = IndexPath(item: messages.count - 1, section: 0)
             collectionView?.scrollToItem(at: indexPath, at: .top, animated: true)

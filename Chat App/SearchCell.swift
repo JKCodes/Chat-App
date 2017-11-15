@@ -98,7 +98,7 @@ class SearchCell: BaseCollectionViewCell {
 
 // MARK: - Handlers and Others
 extension SearchCell {
-    func handleAdd() {
+    @objc func handleAdd() {
         guard let user = user else { return }
         
         delegate?.addRemoveFriend(user: user)  

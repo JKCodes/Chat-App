@@ -79,7 +79,7 @@ class LoginView: UIView {
     lazy var loginButton: UIButton = { [unowned self] in
         let button = LoginView.returnTemplateButton()
         button.setTitle("Login", for: .normal)
-        button.backgroundColor = redColor
+        button.backgroundColor = LoginView.redColor
         button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         return button
     }()
@@ -97,9 +97,9 @@ class LoginView: UIView {
         guard let this = self else { return UIButton() }
         let button = UIButton(type:  .system)
         
-        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSFontAttributeName: UIFont.systemFont(ofSize: 14), NSForegroundColorAttributeName: UIColor.lightGray])
+        let attributedTitle = NSMutableAttributedString(string: "Don't have an account?  ", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray])
         
-        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSFontAttributeName: UIFont.boldSystemFont(ofSize: 14), NSForegroundColorAttributeName: UIColor.rgb(r: 17, g: 154, b: 237)]))
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.rgb(r: 17, g: 154, b: 237)]))
         
         button.setAttributedTitle(attributedTitle, for: .normal)
         button.addTarget(this, action: #selector(handleShowSignUp), for: .touchUpInside)
@@ -156,16 +156,16 @@ extension LoginView {
 
 // MARK: - Handlers
 extension LoginView {
-    func handleLogin() {
+    @objc func handleLogin() {
         guard let email = emailField.text, let password = passwordField.text else { return }
         delegate?.handleLogin(email: email, password: password)
     }
     
-    func handleShowSignUp() {
+    @objc func handleShowSignUp() {
         delegate?.handleShowSignUp()
     }
     
-    func handleCancel() {
+    @objc func handleCancel() {
         delegate?.handleCancel()
     }
 }

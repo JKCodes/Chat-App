@@ -110,11 +110,11 @@ extension SettingsCell {
 
 // MARK: - Handlers
 extension SettingsCell {
-    func handleTapped() {
+    @objc func handleTapped() {
         enabled ? disableSetting() : enableSetting()
     }
     
-    func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
+    @objc func handleSwipe(_ gesture: UISwipeGestureRecognizer) {
         switch gesture.direction {
         case UISwipeGestureRecognizerDirection.left: disableSetting()
         case UISwipeGestureRecognizerDirection.right: enableSetting()

@@ -130,12 +130,12 @@ extension ProfileView {
 
 // MARK: - Handlers
 extension ProfileView {
-    func handleEditProfile() {
+    @objc func handleEditProfile() {
         guard let user = user else { return }
         delegate?.handleEditProfile(user: user)
     }
     
-    func handleBack() {
+    @objc func handleBack() {
         delegate?.handleBack()
     }
 }
